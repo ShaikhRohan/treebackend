@@ -250,6 +250,34 @@ app.post('/login', async (req, res) => {
   });
 
 
+  app.post('/updatecountry', async (req, res) => {
+  // Get username and password from request body
+  const { uniqueid , country } = req.body;
+
+  // Find user in users collection
+  try {
+    // Find user in users collection
+    const user = await Tree.findOne({ uniqueid });
+
+    if (user) {
+      // Create and sign a JWT token
+      user.country = country;
+      await user.save()
+      return res.status(200).send(user);
+      // Return the token to the client
+
+    } else {
+      // Return an error message if the login fails
+      return res.status(401).send('Not Update' );
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+  });
+
+
+
   app.post('/sendrequest', async (req, res) => {
     // Get username and password from request body
     const { uniqueid , senderUniqueid } = req.body;
