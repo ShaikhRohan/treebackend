@@ -9,6 +9,7 @@ const StoreApplication = require('./Model/storeApplication')
 const RequestCenter = require('./Model/requestCenter')
 const Node = require('./Model/node')
 const axios = require('axios');
+const { countReset } = require('console');
 require('dotenv').config();
 app.use('/addproduct', express.static(path.join(__dirname, 'uploads')));
 const upload = multer({
@@ -45,7 +46,8 @@ const treeSchema = new mongoose.Schema({
   fcm : String,
   uniqueid : {type : Number , unique : true},
   email : {type : String , unique : true},
-  password : String
+  password : String,
+  country : String
 });
 
 const Tree = mongoose.model('Tree', treeSchema);
@@ -180,6 +182,7 @@ app.post('/addNode', async (req, res) => {
   const fcm = req.body.fcm;
   const email = req.body.email;
   const password = req.body.password;
+  const country = req.body.country;
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 if (emailRegex.test(email)) {
 } else {
@@ -195,7 +198,7 @@ if(password.length < 8){
 
   count = count + 1;
   if (!parentNode) {
-    parentNode = new Tree({ name: parent, level: 0 , fcm : fcm , uniqueid : count , email : email.toLowerCase() , password : password });
+    parentNode = new Tree({ name: parent, level: 0 , fcm : fcm , uniqueid : count , email : email.toLowerCase() , password : password , country : country });
     await parentNode.save();
     if(count === 1){
       await axios.post('http://localhost:5000/addNodeOnTree', {
