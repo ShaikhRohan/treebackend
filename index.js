@@ -528,6 +528,36 @@ else{
 
 
 
+    app.post('/updatequantity', async (req, res) => {
+      // Get username and password from request body
+      const { productid , sellerid , quantity } = req.body;
+    
+      // Find user in users collection
+      try {
+        // Find user in users collection
+        const product = await Product.findOne({ _id : productid , seller : sellerid });
+    
+        if (product) {
+          // Create and sign a JWT token
+          const previousQuantity = parseInt(product.qty);
+          const amountInt = parseInt(quantity)
+          product.qty = previousQuantity+amountInt;
+          await product.save()
+          return res.status(200).send(product);
+          // Return the token to the client
+    
+        } else {
+          // Return an error message if the login fails
+          return res.status(401).send('Not Update' );
+        }
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+      });
+
+
+
   app.listen(5000, () => {
   console.log('Server started on port 5000');
 });
