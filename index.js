@@ -7,6 +7,7 @@ const multer = require('multer');
 const Product = require('./Model/addProduct')
 const StoreApplication = require('./Model/storeApplication')
 const RequestCenter = require('./Model/requestCenter')
+const Geneology = require('./Model/geneology')
 const Node = require('./Model/node')
 const axios = require('axios');
 const { countReset } = require('console');
@@ -426,7 +427,7 @@ app.post('/login', async (req, res) => {
 // Add a node to the tree
 app.post('/addNodeOnTree', async (req, res) => {
   try {
-    const { value , parent } = req.body;
+    const { value , parent , parentid } = req.body;
     console.log("value "+value)
     const rootNode = await Node.findOne({ level: 0 });
     const existOrNot = await Node.findOne({ value : value})
@@ -442,7 +443,9 @@ else{
 
     if (!rootNode) {
       const newNode = new Node({ value, level: 0 });
+      const newTree = new Geneology({placementnode : value , level : 0})
       await newNode.save();
+      await newTree.save();
       return res.json({ msg: 'Root node created successfully', node: newNode });
     }
 
@@ -453,7 +456,9 @@ else{
     }
 
     const newNode = new Node({ value, level: emptyPosition.node.level + 1 , parent : parent});
+    const newTree = new Geneology({placementnode:value, parentnode:parentid ,  level: emptyPosition.node.level + 1 })
     await newNode.save();
+    await newTree.save();
 
     if (emptyPosition.position === 'left') {
       emptyPosition.node.left = newNode._id;
