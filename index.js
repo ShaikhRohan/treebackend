@@ -427,7 +427,7 @@ app.post('/login', async (req, res) => {
 // Add a node to the tree
 app.post('/addNodeOnTree', async (req, res) => {
   try {
-    const { value , parent , parentid } = req.body;
+    const { value , parent , parentid , position } = req.body;
     console.log("value "+value)
     const rootNode = await Node.findOne({ level: 0 });
     const existOrNot = await Node.findOne({ value : value})
@@ -453,6 +453,19 @@ else{
 
     if (!emptyPosition) {
       return res.status(400).json({ msg: 'The tree has reached its maximum depth of 5 levels' });
+    }
+
+    if(position === "Left"){
+      const geneNode = await Geneology.findOne({ placementnode: parentid });
+      if(geneNode){
+        if(!geneNode.leftnode){
+          geneNode.leftnode = value
+          await geneNode.save()
+        }
+        else{
+          return res.status(403).send("Left position is already assigned")
+        }
+      }
     }
 
     const newNode = new Node({ value, level: emptyPosition.node.level + 1 , parent : parent});
