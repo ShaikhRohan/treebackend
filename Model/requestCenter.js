@@ -17,6 +17,15 @@ const requestCenter = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true
   },
+  position: {
+    type: String,
+    enum: ['Left', 'Right'],
+    required: true
+  },
+  placementId: {
+    type: String,
+    required: true
+  },
   accept: {
     type: Number,
     enum: [0, 1],

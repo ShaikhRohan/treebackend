@@ -280,7 +280,7 @@ app.post('/login', async (req, res) => {
 
   app.post('/sendrequest', async (req, res) => {
     // Get username and password from request body
-    const { uniqueid , senderUniqueid } = req.body;
+    const { uniqueid , senderUniqueid , position , placementId } = req.body;
     // Find user in users collection
     try {
       if(uniqueid === senderUniqueid){
@@ -300,7 +300,7 @@ app.post('/login', async (req, res) => {
           token : user.fcm
         }
         console.log("User2 "+user2)
-        const newrequest = new RequestCenter({ requestSenderUniqueId : senderUniqueid, requestSenderObjectId: user2._id, requestReceiverUniqueId : uniqueid , requestReceiverObjectId: user._id , accept: 0 });
+        const newrequest = new RequestCenter({ requestSenderUniqueId : senderUniqueid, requestSenderObjectId: user2._id, requestReceiverUniqueId : uniqueid , requestReceiverObjectId: user._id, position : position , placementId : placementId , accept: 0 });
         await newrequest.save()
         return res.status(200).send(fcm);
         // Return the token to the client
@@ -555,6 +555,35 @@ else{
         res.status(500).json({ error: 'Internal server error' });
       }
       });
+
+
+
+      app.post('/deleteproduct', async (req, res) => {
+        // Get username and password from request body
+        const { productid , sellerid} = req.body;
+      
+        // Find user in users collection
+        try {
+          // Find user in users collection
+          const product = await Product.deleteOne({ _id : productid , seller : sellerid });
+      
+          if (product) {
+            // Create and sign a JWT token
+            return res.status(200).send(product);
+            // Return the token to the client
+      
+          } else {
+            // Return an error message if the login fails
+            return res.status(401).send('Product not found' );
+          }
+        } catch (err) {
+          console.error(err);
+          res.status(500).json({ error: 'Internal server error' });
+        }
+        });
+
+
+
 
 
 
