@@ -436,10 +436,7 @@ if(existOrNot){
   return res.status(402).send("Node Already exists")
 }
 else{
-  if(requestExist){
-    requestExist.accept = 1;
-    await requestExist.save();
-  }
+ 
 
     if (!rootNode) {
       const newNode = new Node({ value, level: 0 });
@@ -466,6 +463,26 @@ else{
           return res.status(403).send("Left position is already assigned")
         }
       }
+    }
+    else if(position === "Right"){
+      const geneNode = await Geneology.findOne({ placementnode: parentid });
+      if(geneNode){
+        if(!geneNode.rightnode){
+          geneNode.rightnode = value
+          await geneNode.save()
+        }
+        else{
+          return res.status(403).send("Right position is already assigned")
+        }
+      }
+    }
+    else{
+     return res.status(500).send('Server error');
+    }
+
+    if(requestExist){
+      requestExist.accept = 1;
+      await requestExist.save();
     }
 
     const newNode = new Node({ value, level: emptyPosition.node.level + 1 , parent : parent});
