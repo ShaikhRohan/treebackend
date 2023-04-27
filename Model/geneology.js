@@ -8,11 +8,9 @@ const requestCenter = new mongoose.Schema({
   },
   leftnode: {
     type: Number,
-    unique:true,
   },
   rightnode: {
     type: Number,
-    unique:true,
   },
   parentnode: {
     type: Number,
