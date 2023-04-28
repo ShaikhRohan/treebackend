@@ -616,6 +616,23 @@ else{
           res.status(500).json({ error: 'Internal server error' });
         }
         });
+        
+        
+        app.post('/getChildsOfGeneology', async (req, res) => {
+          const uniqueId = req.body.placementId
+          try {
+            const result = await Geneology.find({
+              placementnode : uniqueId
+            }).exec();
+        
+            res.send(result);
+          } catch (error) {
+            console.error(error);
+            res.status(500).send('An error occurred while retrieving the data');
+          }
+        });
+
+
 
 
 
