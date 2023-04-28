@@ -633,6 +633,18 @@ else{
         });
 
 
+           app.post('/getAllChildsOfGeneology', async (req, res) => {
+          try {
+            const result = await Geneology.find({}).exec()
+        
+            res.send(result);
+          } catch (error) {
+            console.error(error);
+            res.status(500).send('An error occurred while retrieving the data');
+          }
+        });
+
+
 
 
 
