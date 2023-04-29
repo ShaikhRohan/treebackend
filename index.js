@@ -283,6 +283,11 @@ app.post('/login', async (req, res) => {
     // Get username and password from request body
     const { uniqueid , senderUniqueid , position , placementId } = req.body;
     // Find user in users collection
+    const exitsOrNotInGeneology = await Geneology.findOne({
+placementnode : senderUniqueid })
+if(!exitsOrNotInGeneology){
+  return res.status(405).send("Not exist in geneology")
+}
     try {
       if(uniqueid === senderUniqueid){
         return res.status(403).send("You can't send request to your own account")
@@ -643,6 +648,55 @@ else{
             res.status(500).send('An error occurred while retrieving the data');
           }
         });
+
+
+
+
+// Define an endpoint that accepts a placementId parameter and returns the desired records
+// Define an endpoint that accepts a placementId parameter and returns the desired records
+// Define an endpoint that accepts a placementId parameter and returns the desired records
+// Define an endpoint that accepts a placementId parameter and returns the desired records
+// Define an endpoint that accepts a placementId parameter and returns the desired records
+app.post('dhaka', async (req, res) => {
+  const { placementId } = req.body;
+
+  try {
+    // Find the geneology with the given placementId value
+    const currentGeneology = await Geneology.findOne({ placementnode: placementId });
+  
+    if (currentGeneology) {
+      // Create a helper function to recursively find all descendants of a geneology and its children
+      const findDescendants = async (geneology) => {
+        const leftGeneology = geneology.leftnode && await Geneology.findOne({ placementnode: geneology.leftnode });
+        const rightGeneology = geneology.rightnode && await Geneology.findOne({ placementnode: geneology.rightnode });
+        const descendants = [leftGeneology, rightGeneology].filter(child => !!child);
+        if (descendants.length === 0) {
+          return [];
+        }
+        const descendantNodes = descendants.flatMap(async descendant => {
+          const leftDescendants = await findDescendants({ leftnode: descendant.placementnode });
+          const rightDescendants = await findDescendants({ rightnode: descendant.placementnode });
+          return [descendant, ...leftDescendants, ...rightDescendants];
+        });
+        return Promise.all(descendantNodes);
+      }
+      
+      // Find all descendants of the current geneology and its children
+      const descendants = await findDescendants(currentGeneology);
+      
+      // Create an array to store the desired records
+      const records = [currentGeneology, ...descendants];
+      
+      // Return the desired records in the response
+      res.json(records);
+    } else {
+      res.status(404).send('Geneology not found');
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal server error');
+  }
+});
 
 
 
