@@ -660,7 +660,11 @@ else{
 
         }
         }
+        else{
+          console.log("Id not found")
+        }
 //////////////for left node
+if(result.length > 0){
         if(result[1].placementnode === 0){
           console.log("Not exist on left")
         }
@@ -736,6 +740,11 @@ else{
           
                     }
         }
+      }
+      else{
+        console.log("Not found")
+        result.push(...[{placementnode:uniqueId}])
+      }
 
             res.send(result);
           } catch (error) {
