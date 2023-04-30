@@ -638,9 +638,11 @@ else{
             }).exec();
              result.push(...result2)
           }
+          else{
+            result.push(...[{placementnode:0}])
+          }
         }
         catch(error){
-
         }
         try{
           const rightNode = result[0].rightnode
@@ -649,6 +651,9 @@ else{
               placementnode : rightNode
             }).exec();
              result.push(...result2)
+          }
+          else{
+            result.push(...[{placementnode:0}])
           }
         }
         catch(error){
