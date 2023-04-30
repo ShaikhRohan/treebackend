@@ -660,6 +660,83 @@ else{
 
         }
         }
+//////////////for left node
+        if(result[1].placementnode === 0){
+          console.log("Not exist on left")
+        }
+        else{
+          ///left node
+          try{
+            const leftNode = result[1].leftnode
+            if(leftNode){
+              const result2 = await Geneology.find({
+                placementnode : leftNode
+              }).exec();
+               result.push(...result2)
+            }
+            else{
+              result.push(...[{placementnode:0}])
+            }
+          }
+          catch(error){
+
+          }
+          ///right node
+          try{
+            const rightNode = result[1].rightnode
+            if(rightNode){
+              const result2 = await Geneology.find({
+                placementnode : rightNode
+              }).exec();
+               result.push(...result2)
+            }
+            else{
+              result.push(...[{placementnode:0}])
+            }
+          }
+          catch(error){
+
+          }
+        }
+////////////for right node
+        if(result[2].placementnode === 0){
+          console.log("Not exist on right")
+        }
+        else{
+                    ///left node
+                    try{
+                      const leftNode = result[2].leftnode
+                      if(leftNode){
+                        const result2 = await Geneology.find({
+                          placementnode : leftNode
+                        }).exec();
+                         result.push(...result2)
+                      }
+                      else{
+                        result.push(...[{placementnode:0}])
+                      }
+                    }
+                    catch(error){
+          
+                    }
+                    ///right node
+                    try{
+                      const rightNode = result[2].rightnode
+                      if(rightNode){
+                        const result2 = await Geneology.find({
+                          placementnode : rightNode
+                        }).exec();
+                         result.push(...result2)
+                      }
+                      else{
+                        result.push(...[{placementnode:0}])
+                      }
+                    }
+                    catch(error){
+          
+                    }
+        }
+
             res.send(result);
           } catch (error) {
             console.error(error);
