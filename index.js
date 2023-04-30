@@ -629,7 +629,32 @@ else{
             const result = await Geneology.find({
               placementnode : uniqueId
             }).exec();
-        
+        if(result){
+          try{
+          const leftNode = result[0].leftnode
+          if(leftNode){
+            const result2 = await Geneology.find({
+              placementnode : leftNode
+            }).exec();
+             result.push(...result2)
+          }
+        }
+        catch(error){
+
+        }
+        try{
+          const rightNode = result[0].rightnode
+          if(rightNode){
+            const result2 = await Geneology.find({
+              placementnode : rightNode
+            }).exec();
+             result.push(...result2)
+          }
+        }
+        catch(error){
+
+        }
+        }
             res.send(result);
           } catch (error) {
             console.error(error);
