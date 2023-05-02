@@ -814,94 +814,44 @@ app.post('dhaka', async (req, res) => {
   }
 });
 
-
-////////////////////////////////////////////////////////////
-/////////////////////////////////find only under child
-// app.post('/searchgeneology', async (req, res) => {
-//   const { uniqueId , findingId } = req.body;
-
-//   try{
-//     const child = await Geneology.findOne({placementnode : findingId})
-//     if(!child){
-//       return res.status(400).send('Id not found in geneology')
-//     }
-//     const parent = await Geneology.findOne({placementnode : uniqueId}) //12
-//     //let match = uniqueIdResult.parentnode; //6
-  
-//     if (!parent || !child) {
-//       return res.status(400).send('Values not found')
-//     }
-  
-//   //   let current = parent;
-//   // while (current !== null) {
-//   //   if (current.leftnode === child.placementnode || current.rightnode === child.placementnode) {
-//   //     console.log('Found')
-//   //     return res.status(200).send("Found");
-//   //   } else if (child.placementnode < current.placementnode) {
-//   //     current = await Geneology.findOne({ placementnode: current.leftnode });
-//   //   } else {
-//   //     current = await Geneology.findOne({ placementnode: current.rightnode });
-//   //   }
-//   // }
-
- 
-
-//     // 10 != 2
-//     // while(match != findingId){
-//     //   const findParent = await Geneology.findOne({placementnode : match})
-//     //   match = findParent.parentnode
-//     //   console.log(match)
-//     //   if(match != undefined){
-//     //   if(match.toString() === findingId){
-//     //     return res.status(401).send("Id found in geneology")
-//     //   }
-//     // }
-//     // }
-//    // return res.status(200).send("Id not found in geneology")
-//   }
-//   catch(err){
-//     console.log("catch"+err)
-//     //return res.status(200).send("Id not found in geneology")
-//   }
-// });
-
-app.post('/checkChild', async (req, res) => {
-  const { parentNodeValue, childNodeValue } = req.body;
-
-  if (parentNodeValue === undefined || childNodeValue === undefined) {
-    return res.status(400).json({ message: 'Missing parentNodeValue or childNodeValue in the request body' });
+async function searchTree(value, target) {
+  if (value === null || value === undefined) {
+    return false;
   }
 
-  const parentNode = await Geneology.findOne({ placementnode: parentNodeValue });
+  const node = await Geneology.findOne({ placementnode:value });
 
-  if (!parentNode) {
-    return res.status(404).json({ message: 'Parent node not found' });
+  if (!node) {
+    return false;
   }
 
-  const childNodeExists = async (nodeValue) => {
-    if (!nodeValue) return false;
-    if (nodeValue === childNodeValue) return true;
+  if (node.placementnode.toString() === target) {
+    console.log("founds")
+    return true;
+  }
+  console.log(node)
+  const leftResult = await searchTree(node.leftnode, target);
+  const rightResult = await searchTree(node.rightnode, target);
 
-    const currentNode = await Geneology.findOne({ placementnode: nodeValue });
+  return leftResult || rightResult;
+}
 
-    if (!currentNode) return false;
 
-    return (
-      (await childNodeExists(currentNode.leftnode)) ||
-      (await childNodeExists(currentNode.rightnode))
-    );
-  };
+app.post('/search', async (req, res) => {
+  const { value, target } = req.body;
 
-  const found = await childNodeExists(parentNodeValue);
-
-  if (found) {
-    return res.status(200).json({ message: 'Child node found' });
-  } else {
-    return res.status(404).json({ message: 'Child node not found' });
+  try {
+    const found = await searchTree(value, target);
+    console.log(found);
+    if (found) {
+      res.status(200).json({ message: 'Found' });
+    } else {
+      res.status(400).json({ message: 'Not Found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'An error occurred', error });
   }
 });
-
-
 
 
 
