@@ -923,7 +923,7 @@ app.post('/getprice', async (req, res) => {
     method: 'GET',
   }
   try {
-    const response = await fetch(`https://api.apilayer.com/exchangerates_data/convert?to=USD&from=${currencyCode}&amount=1`, requestOptions);
+    const response = await fetch(`https://api.apilayer.com/exchangerates_data/convert?to=${currencyCode}&from=USD&amount=1`, requestOptions);
     const data = await response.json()
     .then(async data => {
       const result = data.result;
