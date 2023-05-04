@@ -855,6 +855,104 @@ app.post('/search', async (req, res) => {
 
 
 
+// app.post('/getprice', async (req, res) => {
+//   const { currencyCode } = req.body;
+
+//   var myHeaders = new Headers();
+//   myHeaders.append("apikey", "t6Mn3qVK0hU3PB1CGkcyAhZ2qADAGcom");
+  
+//   var requestOptions = {
+//     method: 'GET',
+//     redirect: 'follow',
+//     headers: myHeaders
+//   };
+
+//   var requestForUSDT = {
+//     method: 'GET',
+//   }
+//   try {
+//     const response = await fetch(`https://api.apilayer.com/exchangerates_data/convert?to=USD&from=${currencyCode}&amount=1`, requestOptions);
+//     const data = await response.json()
+//     .then(async data => {
+//       const result = data.result;
+//       console.log(result)
+//       const price = {
+//         usdPrice : result
+//       }
+//       const response2 = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=usd` , requestForUSDT );
+//       const data2 = await response2.json()
+//       .then(data2 =>{
+//         const result2 = data2["tether"].usd
+//         console.log(result2)
+//         const finalPrice = result2*result;
+//         console.log(finalPrice.toFixed(5))
+//         const resOfUsdt = {
+//           usdt : finalPrice.toFixed(5)
+//         }
+        
+//       })
+//   })
+//     // return res.status(200).send(data);
+//   } catch (error) {
+//     console.log('error', error);
+//     res.status(500).send('Internal server error');
+//   }
+  
+// //  await fetch(`https://api.apilayer.com/exchangerates_data/convert?to=USD&from=${currencyCode}&amount=1`, requestOptions)
+// //     .then(response => response.text())
+// //     .then(
+// //       result => console.log(result)
+
+// //       )
+// //     .catch(error => console.log('error', error));
+// });
+
+app.post('/getprice', async (req, res) => {
+  const { currencyCode } = req.body;
+
+  var myHeaders = new Headers();
+  myHeaders.append("apikey", "t6Mn3qVK0hU3PB1CGkcyAhZ2qADAGcom");
+  
+  var requestOptions = {
+    method: 'GET',
+    redirect: 'follow',
+    headers: myHeaders
+  };
+
+  var requestForUSDT = {
+    method: 'GET',
+  }
+  try {
+    const response = await fetch(`https://api.apilayer.com/exchangerates_data/convert?to=USD&from=${currencyCode}&amount=1`, requestOptions);
+    const data = await response.json()
+    .then(async data => {
+      const result = data.result;
+      console.log(result)
+      const price = {
+        usdPrice : result
+      }
+      const response2 = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=usd` , requestForUSDT );
+      const data2 = await response2.json()
+      .then(data2 =>{
+        const result2 = data2["tether"].usd
+        console.log(result2)
+        const finalPrice = result2*result;
+        console.log(finalPrice.toFixed(5))
+        const resOfUsdt = {
+          usdt : finalPrice.toFixed(5)
+        }
+        return res.status(200).json(resOfUsdt);
+      })
+  })
+  } catch (error) {
+    console.log('error', error);
+    res.status(500).send('Internal server error');
+  }
+});
+
+
+
+
   app.listen(5000, () => {
   console.log('Server started on port 5000');
 });
