@@ -48,7 +48,8 @@ const treeSchema = new mongoose.Schema({
   uniqueid : {type : Number , unique : true},
   email : {type : String , unique : true},
   password : String,
-  country : String
+  country : String,
+  currencycode : String
 });
 
 const Tree = mongoose.model('Tree', treeSchema);
@@ -184,6 +185,7 @@ app.post('/addNode', async (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   const country = req.body.country;
+  const currencycode = req.body.currencycode;
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 if (emailRegex.test(email)) {
 } else {
@@ -199,7 +201,7 @@ if(password.length < 8){
 
   count = count + 1;
   if (!parentNode) {
-    parentNode = new Tree({ name: parent, level: 0 , fcm : fcm , uniqueid : count , email : email.toLowerCase() , password : password , country : country });
+    parentNode = new Tree({ name: parent, level: 0 , fcm : fcm , uniqueid : count , email : email.toLowerCase() , password : password , country : country , currencycode : currencycode });
     await parentNode.save();
     if(count === 1){
       await axios.post('http://localhost:5000/addNodeOnTree', {
@@ -951,6 +953,28 @@ app.post('/getprice', async (req, res) => {
 });
 
 
+
+
+
+app.post('/getf3price', async (req, res) => {
+  const url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest';
+  const headers = {
+    'Accepts': 'application/json',
+    'X-CMC_PRO_API_KEY': '5908d9a4-fd23-4b37-81f8-c2be0e8d4cbc'
+  };
+  const params = {
+    symbol: 'F3',
+    convert: 'USDT'
+  };
+  await axios.get(url, { headers, params })
+  .then(response => {
+    console.log(response)
+    console.log(`The current price of F3 in USDT is: ${priceUsd.toFixed(8)}`);
+  })
+  .catch(error => {
+    console.error('Error:', error.message);
+  });
+ });
 
 
   app.listen(5000, () => {
