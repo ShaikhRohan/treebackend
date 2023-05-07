@@ -255,7 +255,7 @@ app.post('/login', async (req, res) => {
 
   app.post('/updatecountry', async (req, res) => {
   // Get username and password from request body
-  const { uniqueid , country } = req.body;
+  const { uniqueid , country , currencycode } = req.body;
 
   // Find user in users collection
   try {
@@ -265,6 +265,7 @@ app.post('/login', async (req, res) => {
     if (user) {
       // Create and sign a JWT token
       user.country = country;
+      user.currencycode = currencycode;
       await user.save()
       return res.status(200).send(user);
       // Return the token to the client
