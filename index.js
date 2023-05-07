@@ -256,7 +256,7 @@ app.post('/login', async (req, res) => {
   app.post('/updatecountry', async (req, res) => {
   // Get username and password from request body
   const { uniqueid , country , currencycode } = req.body;
-
+  console.log(currencycode)
   // Find user in users collection
   try {
     // Find user in users collection
