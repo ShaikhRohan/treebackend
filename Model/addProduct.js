@@ -35,7 +35,7 @@ const productSchema = new mongoose.Schema({
   },
   unit: {
     type: String,
-    enum: ['kg', 'mg', 'ltr','ml','pack','box'],
+    enum: ['kg', 'mg', 'ltr','ml','pack','box','pcs'],
     required: true
   },
   contactnumber: {

@@ -978,6 +978,29 @@ app.post('/getf3price', async (req, res) => {
  });
 
 
+ app.post('/checkExistanceInGEneology', async (req, res) => {
+  const {uniqueid} = req.body;
+  try {
+    // Find user in users collection
+    const geneologyExist = await Geneology.findOne({ placementnode : uniqueid });
+
+    if (geneologyExist) {
+      // Create and sign a JWT token
+      return res.status(200).send({result : "true"});
+      // Return the token to the client
+
+    } else {
+      // Return an error message if the login fails
+      return res.status(401).send({result : "false"});
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+
+ });
+
+
   app.listen(5000, () => {
   console.log('Server started on port 5000');
 });
