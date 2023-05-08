@@ -912,9 +912,9 @@ app.post('/search', async (req, res) => {
 
 app.post('/getprice', async (req, res) => {
   const { currencyCode } = req.body;
-
+  //t6Mn3qVK0hU3PB1CGkcyAhZ2qADAGcom
   var myHeaders = new Headers();
-  myHeaders.append("apikey", "t6Mn3qVK0hU3PB1CGkcyAhZ2qADAGcom");
+  myHeaders.append("apikey", "4pfnkR1VYaKeyaX2jRhVyhvPApXo02Iq");
   
   var requestOptions = {
     method: 'GET',
