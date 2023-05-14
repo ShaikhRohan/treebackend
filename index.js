@@ -1003,6 +1003,7 @@ app.post('/getf3price', async (req, res) => {
 
  app.post('/serachProducts', async (req, res) => {
   const {productName , seller} = req.body;
+  console.log(productName)
   try {
     // Find user in users collection
     const products = await Product.find({ seller , productname : { $regex: productName.toString(), $options: 'i' } });
