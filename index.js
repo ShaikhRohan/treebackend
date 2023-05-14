@@ -1005,7 +1005,7 @@ app.post('/getf3price', async (req, res) => {
   const {productName , seller} = req.body;
   try {
     // Find user in users collection
-    const products = await Product.find({ seller , productname : { $regex: productName, $options: 'i' } });
+    const products = await Product.find({ seller , productname : { $regex: productName.toString(), $options: 'i' } });
 
     if (products) {
       // Create and sign a JWT token
