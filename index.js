@@ -914,7 +914,7 @@ app.post('/getprice', async (req, res) => {
   //4pfnkR1VYaKeyaX2jRhVyhvPApXo02Iq
   //KhFlzCcYK7801i8Htbhvimsvvo6ZvK3H
   var myHeaders = new Headers();
-  myHeaders.append("apikey", "t6Mn3qVK0hU3PB1CGkcyAhZ2qADAGcom");
+  myHeaders.append("apikey", "3mvXXchf0I8X3xg7WufmiDY0JdJ3CjVl");
   
   var requestOptions = {
     method: 'GET',
