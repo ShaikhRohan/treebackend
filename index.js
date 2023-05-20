@@ -361,9 +361,9 @@ if(!exitsOrNotInGeneology){
 
     app.post('/addproduct', upload.array('images', 5), async (req, res) => {
       try {
-        const { productname,f3Price,capital,price,f3prices,usdtprices,qty,totalfiatprice,unit,contactnumber,housenumber,description , seller } = req.body;
+        const { productname,f3Price,capital,price,f3prices,usdtprices,qty,totalfiatprice,unit,contactnumber,housenumber,description , seller , country } = req.body;
         const images = req.files.map(file => file.filename);
-        const product = new Product({productname,f3Price,capital,price,f3prices,usdtprices,qty,totalfiatprice,unit,contactnumber,housenumber,description, images , seller });
+        const product = new Product({productname,f3Price,capital,price,f3prices,usdtprices,qty,totalfiatprice,unit,contactnumber,housenumber,description, images , seller , country });
         await product.save();
         return res.status(200).send("Product Add Successfuly");
       } catch (error) {
@@ -857,8 +857,6 @@ app.post('/search', async (req, res) => {
 });
 
 
-
-// app.post('/getprice', async (req, res) => {
 //   const { currencyCode } = req.body;
 
 //   var myHeaders = new Headers();
@@ -1007,6 +1005,29 @@ app.post('/getf3price', async (req, res) => {
   try {
     // Find user in users collection
     const products = await Product.find({ seller , productname : { $regex: productName.toString(), $options: 'i' } });
+
+    if (products) {
+      // Create and sign a JWT token
+      return res.status(200).send(products);
+      // Return the token to the client
+    } else {
+      // Return an error message if the login fails
+      return res.status(401).send('No Product Available' );
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+
+ });
+
+
+ app.post('/getProductsByCountry', async (req, res) => {
+  const {country} = req.body;
+  console.log(productName)
+  try {
+    // Find user in users collection
+    const products = await Product.find({ country : country });
 
     if (products) {
       // Create and sign a JWT token
