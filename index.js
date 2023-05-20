@@ -1024,13 +1024,14 @@ app.post('/getf3price', async (req, res) => {
 
  app.post('/getProductsByCountry', async (req, res) => {
   const {country} = req.body;
-  console.log(productName)
+  console.log(country)
   try {
     // Find user in users collection
     const products = await Product.find({ country : country });
 
     if (products) {
       // Create and sign a JWT token
+      console.log(products)
       return res.status(200).send(products);
       // Return the token to the client
     } else {
