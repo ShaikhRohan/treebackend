@@ -8,6 +8,7 @@ const Product = require('./Model/addProduct')
 const StoreApplication = require('./Model/storeApplication')
 const RequestCenter = require('./Model/requestCenter')
 const Geneology = require('./Model/geneology')
+const ProductRequest = require('./Model/productRequest')
 const Node = require('./Model/node')
 const axios = require('axios');
 const { countReset } = require('console');
@@ -1047,6 +1048,45 @@ app.post('/getf3price', async (req, res) => {
 
  });
 
+ //////////////////send product request//////////////////
+ app.post('/sendproductrequest', async (req, res) => {
+  // Get username and password from request body
+  const { uniqueid , senderUniqueid , productName , country , productId   } = req.body;
+  // Find user in users collection
+  const exitsOrNotInProductsRequest = await ProductRequest.findOne({
+senderId : senderUniqueid , productId : productId , ownerId : uniqueid  })
+if(exitsOrNotInProductsRequest){
+return res.status(405).send("Request already sent")
+}
+  try {
+    if(uniqueid === senderUniqueid){
+      return res.status(403).send("You can't send request to your own account")
+    }
+
+      const newrequest = new ProductRequest({ senderId : senderUniqueid, ownerId: uniqueid , productId : productId , productName: productName, country : country ,  accept: 0 });
+      await newrequest.save()
+      return res.status(200).send("Request sent");
+  
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+  });
+
+  ///////////////get all send product request /////////////////
+  app.post('/getallsendproductrequest', async (req, res) => {
+    // Get username and password from request body
+    const { uniqueid } = req.body;
+    // Find user in users collection
+    const allProductsRequest = await ProductRequest.find({
+   ownerId : uniqueid , accept : 0  })
+  if(allProductsRequest.length >0){
+  return res.status(200).send(allProductsRequest)
+  }
+  else{
+    return res.status(401).send("No records found!")
+  }
+    });
 
   app.listen(5000, () => {
   console.log('Server started on port 5000');
