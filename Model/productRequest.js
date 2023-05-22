@@ -17,6 +17,10 @@ const productRequest = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true
   },
+  normalUniqueId: {
+    type: Number,
+    required: true
+  },
   productId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true

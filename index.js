@@ -1051,7 +1051,7 @@ app.post('/getf3price', async (req, res) => {
  //////////////////send product request//////////////////
  app.post('/sendproductrequest', async (req, res) => {
   // Get username and password from request body
-  const { uniqueid , senderUniqueid , productName , country , productId   } = req.body;
+  const { uniqueid, normalUniqueId , senderUniqueid , productName , country , productId   } = req.body;
   // Find user in users collection
   const exitsOrNotInProductsRequest = await ProductRequest.findOne({
 senderId : senderUniqueid , productId : productId , ownerId : uniqueid  })
@@ -1063,7 +1063,7 @@ return res.status(405).send("Request already sent")
       return res.status(403).send("You can't send request to your own account")
     }
 
-      const newrequest = new ProductRequest({ senderId : senderUniqueid, ownerId: uniqueid , productId : productId , productName: productName, country : country ,  accept: 0 });
+      const newrequest = new ProductRequest({ senderId : senderUniqueid, normalUniqueId: normalUniqueId ,  ownerId: uniqueid , productId : productId , productName: productName, country : country ,  accept: 0 });
       await newrequest.save()
       return res.status(200).send("Request sent");
   
