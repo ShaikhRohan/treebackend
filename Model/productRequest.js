@@ -11,10 +11,12 @@ const productRequest = new mongoose.Schema({
   },
   ownerId: {
     type: mongoose.Schema.Types.ObjectId,
+    ref : 'Tree',
     required: true
   },
   senderId: {
     type: mongoose.Schema.Types.ObjectId,
+    ref : 'Tree',
     required: true
   },
   normalUniqueId: {
@@ -23,6 +25,7 @@ const productRequest = new mongoose.Schema({
   },
   productId: {
     type: mongoose.Schema.Types.ObjectId,
+    ref : 'Product',
     required: true
   },
   accept: {
