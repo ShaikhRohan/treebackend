@@ -1088,6 +1088,41 @@ return res.status(405).send("Request already sent")
   }
     });
 
+
+  //////////////product approval/////////////////////////
+  app.post('/approveproductrequest', async (req, res) => {
+    // Get username and password from request body
+    const { uniqueId } = req.body;
+    // Find user in users collection
+    const allProductsRequest = await ProductRequest.findOne({
+   _id : uniqueId , accept : 0  })
+  if(allProductsRequest){
+    allProductsRequest.accept = 1;
+    allProductsRequest.save();
+  return res.status(200).send("Product approved by owner!")
+  }
+  else{
+    return res.status(401).send("No records found!")
+  }
+    });
+
+  ////////////delete product approval/////////////////////
+  app.post('/deleteproductapprovalrequest', async (req, res) => {
+    const { uniqueId } = req.body;
+    try {
+      const user = await ProductRequest.deleteOne({ _id : uniqueId , accept: 0});
+      if (user.deletedCount === 1) {
+        return res.status(200).send(user);
+      } else {
+        // Return an error message if the login fails
+        return res.status(401).send('No Request' );
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+    });
+
   app.listen(5000, () => {
   console.log('Server started on port 5000');
 });
