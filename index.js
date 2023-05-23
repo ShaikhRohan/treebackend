@@ -1123,6 +1123,45 @@ return res.status(405).send("Request already sent")
     }
     });
 
+  ////////////get all approved products for user country///////////
+  app.post('/getallapprovedproductsforuser', async (req, res) => {
+    const { senderId , country } = req.body;
+    try {
+      const user = await ProductRequest.find({ senderId : senderId , country:country ,accept: 1});
+      if (user.length>0) {
+        const productId =await user.map((item) => item.productId.toString());
+        const products = await Product.find({ _id: { $in: productId } });
+        return res.status(200).send(products);
+      } else {
+        // Return an error message if the login fails
+        return res.status(401).send('No Request' );
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+    });
+
+  ///////////get all affiliate user with store//////////////////
+  app.post('/getallaffiliateuserwithstore', async (req, res) => {
+    const { ownerId , country } = req.body;
+    try {
+      const user = await ProductRequest.find({ ownerId : ownerId , accept: 1});
+      if (user.length>0) {
+        const productId =await user.map((item) => item.senderId.toString());
+        const uniqueArray = [...new Set(productId)];
+        const products = await Tree.find({ _id: { $in: uniqueArray } });
+        return res.status(200).send(products);
+      } else {
+        // Return an error message if the login fails
+        return res.status(401).send('No Request' );
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+    });
+
   app.listen(5000, () => {
   console.log('Server started on port 5000');
 });
