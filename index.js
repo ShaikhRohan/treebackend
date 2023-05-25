@@ -1142,6 +1142,27 @@ return res.status(405).send("Request already sent")
     }
     });
 
+  ////////////get all approved product store for user country/////////////
+   app.post('/getallapprovedproductstoreforusercountry', async (req, res) => {
+    const { senderId , country } = req.body;
+    try {
+      const user = await ProductRequest.find({ senderId : senderId , country:country ,accept: 1});
+      if (user.length>0) {
+        const ownerId =await user.map((item) => item.ownerId.toString());
+        const uniqueArray = [...new Set(ownerId)];
+        const userFromTree = await Tree.find({ _id: { $in: uniqueArray } });
+        //const products = await Product.find({ _id: { $in: productId } });
+        return res.status(200).send(userFromTree);
+      } else {
+        // Return an error message if the login fails
+        return res.status(401).send('No Request' );
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+    });
+
   ///////////get all affiliate user with store//////////////////
   app.post('/getallaffiliateuserwithstore', async (req, res) => {
     const { ownerId , country } = req.body;
