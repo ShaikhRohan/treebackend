@@ -1150,9 +1150,9 @@ return res.status(405).send("Request already sent")
       if (user.length>0) {
         const ownerId =await user.map((item) => item.ownerId.toString());
         const uniqueArray = [...new Set(ownerId)];
-        //const userFromTree = await Tree.find({ _id: { $in: uniqueArray } });
+        const userFromTree = await Tree.find({ _id: { $in: uniqueArray } });
         //const products = await Product.find({ _id: { $in: productId } });
-        return res.status(200).send(uniqueArray);
+        return res.status(200).send(userFromTree);
       } else {
         // Return an error message if the login fails
         return res.status(401).send('No Request' );
