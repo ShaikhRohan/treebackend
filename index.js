@@ -1204,6 +1204,30 @@ return res.status(405).send("Request already sent")
       }
     });
 
+
+    app.post('/searchandgetallproductswithcountryshopnow', async (req, res) => {
+      const {seller , country , searchValue} = req.body
+      try {
+        // Find user in users collection
+        const products = await Product.find({ seller, country : country ,   $or: [
+          { productname: { $regex: searchValue, $options: 'i' } }, // Case-insensitive search for product name
+          { description: { $regex: searchValue, $options: 'i' } } // Case-insensitive search for description
+        ] });
+    
+        if (products) {
+          // Create and sign a JWT token
+          return res.status(200).send(products);
+          // Return the token to the client
+        } else {
+          // Return an error message if the login fails
+          return res.status(401).send('No Product Available' );
+        }
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+      }
+    });
+
   app.listen(5000, () => {
   console.log('Server started on port 5000');
 });
