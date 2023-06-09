@@ -1243,6 +1243,26 @@ return res.status(405).send("Request already sent")
       }
     });
 
+
+
+    app.post('/findsendproductapprovalrequest', async (req, res) => {
+      try {
+        const sellerId = req.body.sellerId;
+        console.log(sellerId)
+        // Insert the array of objects into the database
+        const pendingRequest = await ApprovalRequest.find({sellerId : sellerId , accept:0});
+        if(pendingRequest.length >= 1){
+          return res.status(200).send(pendingRequest);
+        }
+        else{
+          return res.status(400).send("No request found");
+        }
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'An error occurred' });
+      }
+    });
+
   app.listen(5000, () => {
   console.log('Server started on port 5000');
 });
