@@ -9,6 +9,7 @@ const StoreApplication = require('./Model/storeApplication')
 const RequestCenter = require('./Model/requestCenter')
 const Geneology = require('./Model/geneology')
 const ProductRequest = require('./Model/productRequest')
+const ApprovalRequest = require('./Model/sendApprovalRequest')
 const Node = require('./Model/node')
 const axios = require('axios');
 const { countReset } = require('console');
@@ -1225,6 +1226,20 @@ return res.status(405).send("Request already sent")
       } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
+      }
+    });
+
+    app.post('/sendproductapprovalrequest', async (req, res) => {
+      try {
+        const requestProducts = req.body;
+        console.log(requestProducts)
+        // Insert the array of objects into the database
+        await ApprovalRequest.insertMany(requestProducts);
+    
+        return res.status(200).json({ message: 'Data stored successfully' });
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'An error occurred' });
       }
     });
 
