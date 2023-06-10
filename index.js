@@ -1247,10 +1247,10 @@ return res.status(405).send("Request already sent")
 
     app.post('/findsendproductapprovalrequest', async (req, res) => {
       try {
-        const sellerId = req.body.sellerId;
+        const {sellerId, currency} = req.body;
         console.log(sellerId)
         // Insert the array of objects into the database
-        const pendingRequest = await ApprovalRequest.find({sellerId : sellerId , accept:0});
+        const pendingRequest = await ApprovalRequest.find({sellerId : sellerId, currency:currency , accept:0});
         if(pendingRequest.length >= 1){
           return res.status(200).send(pendingRequest);
         }

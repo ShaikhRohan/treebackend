@@ -34,6 +34,10 @@ const sendApprovalRequest = new mongoose.Schema({
     type: String,
     required: true
   },
+  currency: {
+    type: String,
+    required: true
+  }
 });
 
 const Approval = mongoose.model('Approval', sendApprovalRequest);
