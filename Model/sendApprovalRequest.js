@@ -29,7 +29,11 @@ const sendApprovalRequest = new mongoose.Schema({
     type: Number,
     enum: [0, 1],
     default : 0,
-  }
+  },
+  uniqueId: {
+    type: String,
+    required: true
+  },
 });
 
 const Approval = mongoose.model('Approval', sendApprovalRequest);
