@@ -1280,6 +1280,20 @@ return res.status(405).send("Request already sent")
     }
       });
 
+        app.post('/deletesendproductapprovalrequest', async (req, res) => {
+      // Get username and password from request body
+      const { _id , sellerId , currency } = req.body;
+      // Find user in users collection
+      const allProductsRequest = await ApprovalRequest.deleteOne({
+     _id : _id , sellerId : sellerId , currency:currency , accept : 0  })
+    if(allProductsRequest){
+    return res.status(200).send("Product approved by owner!")
+    }
+    else{
+      return res.status(401).send("No records found!")
+    }
+      });
+
       app.post('/findsendproductapprovedrequestforseller', async (req, res) => {
         try {
           const {sellerId, currency} = req.body;
