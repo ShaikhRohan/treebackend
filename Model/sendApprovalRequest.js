@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const sendApprovalRequest = new mongoose.Schema({
+  purchaseNumber: {
+    type: Number,
+    unique: true
+  },
     productId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true
@@ -37,6 +41,10 @@ const sendApprovalRequest = new mongoose.Schema({
   currency: {
     type: String,
     required: true
+  },
+  purchaseDate: {
+    type: Date,
+    default: Date.now
   }
 });
 
