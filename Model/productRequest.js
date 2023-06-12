@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const productRequest = new mongoose.Schema({
+  purchaseNumber : {
+    type : Number,
+    unique : true
+  },
   productName: {
     type: String,
     required: true
@@ -27,6 +31,10 @@ const productRequest = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref : 'Product',
     required: true
+  },
+  purchaseDate : {
+    type : Date,
+    default : Date
   },
   accept: {
     type: Number,
