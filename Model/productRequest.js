@@ -28,10 +28,6 @@ const productRequest = new mongoose.Schema({
     ref : 'Product',
     required: true
   },
-  purchaseDate : {
-    type : Date,
-    default : Date.now
-  },
   accept: {
     type: Number,
     enum: [0, 1],
