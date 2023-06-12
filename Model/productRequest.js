@@ -30,7 +30,7 @@ const productRequest = new mongoose.Schema({
   },
   purchaseDate : {
     type : Date,
-    default : Date
+    default : Date.now
   },
   accept: {
     type: Number,
