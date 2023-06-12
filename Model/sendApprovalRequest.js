@@ -13,6 +13,10 @@ const sendApprovalRequest = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     required: true
   },
+  sellerUniqueId: {
+    type: String,
+    required: true
+  },
   quantity: {
     type: Number,
     required: true

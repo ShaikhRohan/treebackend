@@ -1253,8 +1253,10 @@ return res.status(405).send("Request already sent")
         const latestPurchaseNumber = latestRequest ? latestRequest.purchaseNumber : 0;
     
         // Assign unique purchaseNumber starting from the latestPurchaseNumber + 1
-        requestProducts.forEach((product, index) => {
+        requestProducts.forEach(async (product, index) => {
           product.purchaseNumber = latestPurchaseNumber + index + 1;
+          const sellerId = await Tree.findOne({_id : product.sellerId})
+          product.sellerUniqueId = sellerId.uniqueid.toString();
         });
     
         // Insert the array of objects into the database
