@@ -14,8 +14,7 @@ const sendApprovalRequest = new mongoose.Schema({
     required: true
   },
   sellerUniqueId: {
-    type: String,
-    required: true
+    type: Number,
   },
   quantity: {
     type: Number,
