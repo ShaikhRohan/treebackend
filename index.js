@@ -1229,50 +1229,21 @@ return res.status(405).send("Request already sent")
       }
     });
 
-    // app.post('/sendproductapprovalrequest', async (req, res) => {
-    //   try {
-    //     const requestProducts = req.body;
-    //     console.log(requestProducts)
-    //     // Insert the array of objects into the database
-    //     await ApprovalRequest.insertMany(requestProducts);
-    
-    //     return res.status(200).json({ message: 'Data stored successfully' });
-    //   } catch (error) {
-    //     console.error(error);
-    //     return res.status(500).json({ error: 'An error occurred' });
-    //   }
-    // });
-
     app.post('/sendproductapprovalrequest', async (req, res) => {
       try {
         const requestProducts = req.body;
-        console.log(requestProducts);
-    
-        // Retrieve the latest purchaseNumber
-        const latestRequest = await ApprovalRequest.findOne({}, {}, { sort: { purchaseNumber: -1 } }).exec();
-        const latestPurchaseNumber = latestRequest ? latestRequest.purchaseNumber : 0;
-    
-        // Assign unique purchaseNumber starting from the latestPurchaseNumber + 1
-        requestProducts.forEach((product, index) => {
-          product.purchaseNumber = latestPurchaseNumber + index + 1;
-        });
-    
+        console.log(requestProducts)
         // Insert the array of objects into the database
-        console.log("Updated "+requestProducts)
-        const insertedProducts = await ApprovalRequest.insertMany(requestProducts);
-        console.log("Insertd products "+insertedProducts)
-        return res.status(200).json({ message: 'Data stored successfully', insertedProducts });
+        await ApprovalRequest.insertMany(requestProducts);
+    
+        return res.status(200).json({ message: 'Data stored successfully' });
       } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'An error occurred' });
       }
     });
-    
 
-   
-    
-
-
+  
 
     app.post('/findsendproductapprovalrequest', async (req, res) => {
       try {
