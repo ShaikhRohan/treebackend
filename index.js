@@ -1253,7 +1253,7 @@ return res.status(405).send("Request already sent")
         const latestPurchaseNumber = latestRequest ? latestRequest.purchaseNumber : 0;
     
         // Assign unique purchaseNumber starting from the latestPurchaseNumber + 1
-        requestProducts.forEach(async (product, index) => {
+        await requestProducts.forEach(async (product, index) => {
           product.purchaseNumber = latestPurchaseNumber + index + 1;
           const sellerId = await Tree.findOne({_id : product.sellerId})
           console.log("Seller id "+sellerId)
