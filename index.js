@@ -1257,7 +1257,7 @@ return res.status(405).send("Request already sent")
           product.purchaseNumber = latestPurchaseNumber + index + 1;
           const sellerId = await Tree.findOne({_id : product.sellerId})
           console.log("Seller id "+sellerId)
-          product.sellerUniqueId = sellerId.uniqueid;
+          product.sellerUniqueId = await sellerId.uniqueid;
         });
     
         // Insert the array of objects into the database
