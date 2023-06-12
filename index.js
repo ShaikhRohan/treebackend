@@ -1243,6 +1243,33 @@ return res.status(405).send("Request already sent")
     //   }
     // });
 
+    // app.post('/sendproductapprovalrequest', async (req, res) => {
+    //   try {
+    //     const requestProducts = req.body;
+    //     console.log(requestProducts);
+    
+    //     // Retrieve the latest purchaseNumber
+    //     const latestRequest = await ApprovalRequest.findOne({}, {}, { sort: { purchaseNumber: -1 } }).exec();
+    //     const latestPurchaseNumber = latestRequest ? latestRequest.purchaseNumber : 0;
+    
+    //     // Assign unique purchaseNumber starting from the latestPurchaseNumber + 1
+    //     requestProducts.forEach(async (product, index) => {
+    //       product.purchaseNumber = latestPurchaseNumber + index + 1;
+    //       const sellerId = await Tree.findOne({_id : product.sellerId})
+    //       console.log("Seller id "+sellerId)
+    //       product.sellerUniqueId = await sellerId.uniqueid;
+    //     });
+    
+    //     // Insert the array of objects into the database
+    //     const insertedProducts = await ApprovalRequest.insertMany(requestProducts);
+    
+    //     return res.status(200).json({ message: 'Data stored successfully', insertedProducts });
+    //   } catch (error) {
+    //     console.error(error);
+    //     return res.status(500).json({ error: 'An error occurred' });
+    //   }
+    // });
+
     app.post('/sendproductapprovalrequest', async (req, res) => {
       try {
         const requestProducts = req.body;
@@ -1253,15 +1280,18 @@ return res.status(405).send("Request already sent")
         const latestPurchaseNumber = latestRequest ? latestRequest.purchaseNumber : 0;
     
         // Assign unique purchaseNumber starting from the latestPurchaseNumber + 1
-        await requestProducts.forEach(async (product, index) => {
+        const productPromises = requestProducts.map(async (product, index) => {
           product.purchaseNumber = latestPurchaseNumber + index + 1;
-          const sellerId = await Tree.findOne({_id : product.sellerId})
-          console.log("Seller id "+sellerId)
+          const sellerId = await Tree.findOne({ _id: product.sellerId });
+          console.log("Seller id: ", sellerId);
           product.sellerUniqueId = await sellerId.uniqueid;
+          return product;
         });
     
+        const resolvedProducts = await Promise.all(productPromises);
+    
         // Insert the array of objects into the database
-        const insertedProducts = await ApprovalRequest.insertMany(requestProducts);
+        const insertedProducts = await ApprovalRequest.insertMany(resolvedProducts);
     
         return res.status(200).json({ message: 'Data stored successfully', insertedProducts });
       } catch (error) {
@@ -1269,6 +1299,7 @@ return res.status(405).send("Request already sent")
         return res.status(500).json({ error: 'An error occurred' });
       }
     });
+    
     
 
 
