@@ -2,8 +2,7 @@ const mongoose = require('mongoose');
 
 const productRequest = new mongoose.Schema({
   purchaseNumber : {
-    type : Number,
-    unique : true
+    type : Number
   },
   productName: {
     type: String,

@@ -1258,14 +1258,18 @@ return res.status(405).send("Request already sent")
         });
     
         // Insert the array of objects into the database
-        await ApprovalRequest.insertMany(requestProducts);
-    
-        return res.status(200).json({ message: 'Data stored successfully' });
+        console.log("Updated "+requestProducts)
+        const insertedProducts = await ApprovalRequest.insertMany(requestProducts);
+        console.log("Insertd products "+insertedProducts)
+        return res.status(200).json({ message: 'Data stored successfully', insertedProducts });
       } catch (error) {
         console.error(error);
         return res.status(500).json({ error: 'An error occurred' });
       }
     });
+    
+
+   
     
 
 
