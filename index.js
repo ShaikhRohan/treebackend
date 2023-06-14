@@ -1371,6 +1371,26 @@ return res.status(405).send("Request already sent")
         }
       });
 
+      ///////////////////////////////////////////////////////////////
+      app.post('/searchfindsendproductapprovedrequestforseller', async (req, res) => {
+        try {
+          const {sellerId, currency , uniqueId} = req.body;
+          console.log(sellerId)
+          // Insert the array of objects into the database
+          const pendingRequest = await ApprovalRequest.find({sellerId : sellerId, currency:currency , accept:1 , uniqueId:uniqueId });
+          if(pendingRequest.length >= 1){
+            return res.status(200).send(pendingRequest);
+          }
+          else{
+            return res.status(400).send("No request found");
+          }
+        } catch (error) {
+          console.error(error);
+          return res.status(500).json({ error: 'An error occurred' });
+        }
+      });
+      ///////////////////////////////////////////////////////////////
+
       app.post('/findsendproductapprovedrequestforbuyer', async (req, res) => {
         try {
           const {sellerId, currency} = req.body;
@@ -1388,6 +1408,26 @@ return res.status(405).send("Request already sent")
           return res.status(500).json({ error: 'An error occurred' });
         }
       });
+
+      ///////////////////////////////////////////////////////////////
+      app.post('/searchfindsendproductapprovedrequestforbuyer', async (req, res) => {
+        try {
+          const {sellerId, currency, sellerUniqueId} = req.body;
+          console.log(sellerId)
+          // Insert the array of objects into the database
+          const pendingRequest = await ApprovalRequest.find({senderId : sellerId, currency:currency , accept:1 , sellerUniqueId : sellerUniqueId});
+          if(pendingRequest.length >= 1){
+            return res.status(200).send(pendingRequest);
+          }
+          else{
+            return res.status(400).send("No request found");
+          }
+        } catch (error) {
+          console.error(error);
+          return res.status(500).json({ error: 'An error occurred' });
+        }
+      });
+      ///////////////////////////////////////////////////////////////
 
   app.listen(5000, () => {
   console.log('Server started on port 5000');
