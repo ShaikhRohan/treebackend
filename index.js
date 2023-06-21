@@ -10,6 +10,7 @@ const RequestCenter = require('./Model/requestCenter')
 const Geneology = require('./Model/geneology')
 const ProductRequest = require('./Model/productRequest')
 const ApprovalRequest = require('./Model/sendApprovalRequest')
+const FundManagement = require('./Model/fundManagement')
 const Node = require('./Model/node')
 const axios = require('axios');
 const { countReset } = require('console');
@@ -1427,6 +1428,55 @@ return res.status(405).send("Request already sent")
           return res.status(500).json({ error: 'An error occurred' });
         }
       });
+      //////////////////////////fund management///////////////////////////////
+      app.post('/addfundmanagement', async (req, res) => {
+        // Get username and password from request body
+        const { f3amount, usdtvalue , fiatvalue , usdtpricecreationtime , f3pricecreationtime , fiatpricecreationtime, usdtvaluenow, pl,idnumber,purchasednumber,accumulatednumberofproducts,accumulatedfiatamount,f3value,usdttvalue,buyerwalletaddress, currency , senderid  } = req.body;
+        // Find user in users collection
+        
+        try {
+      
+          const fundManagement = new FundManagement({f3amount,usdtvalue,fiatvalue,usdtpricecreationtime,f3pricecreationtime,fiatpricecreationtime,usdtvaluenow,pl,idnumber,purchasednumber,accumulatednumberofproducts,accumulatedfiatamount,f3value,usdttvalue,buyerwalletaddress, currency, senderid })
+            await fundManagement.save()
+            return res.status(200).send("Record Added Successfully");
+        
+        } catch (err) {
+          console.error(err);
+          res.status(500).json({ error: 'Internal server error' });
+        }
+      });
+
+      app.post('/deletefundmanagementrecord', async (req, res) => {
+        // Get username and password from request body
+        const { _id , currency , senderid } = req.body;
+        // Find user in users collection
+        const allProductsRequest = await FundManagement.deleteOne({
+       _id : _id , senderid : senderid , currency:currency   })
+      if(allProductsRequest){
+      return res.status(200).send("Product approved by owner!")
+      }
+      else{
+        return res.status(401).send("No records found!")
+      }
+        });
+
+        app.post('/getfundmanagementrecord', async (req, res) => {
+          try {
+            const {senderid, currency} = req.body;
+            // Insert the array of objects into the database
+            const pendingRequest = await FundManagement.find({senderid, currency});
+            if(pendingRequest.length >= 1){
+              return res.status(200).send(pendingRequest);
+            }
+            else{
+              return res.status(400).send("No request found");
+            }
+          } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: 'An error occurred' });
+          }
+        });
+
       ///////////////////////////////////////////////////////////////
 
   app.listen(5000, () => {
