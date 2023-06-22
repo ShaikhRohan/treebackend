@@ -1436,7 +1436,7 @@ return res.status(405).send("Request already sent")
         
         try {
       
-          const fundManagement = new FundManagement({f3amount,usdtvalue,fiatvalue,usdtpricecreationtime,f3pricecreationtime,fiatpricecreationtime,usdtvaluenow,pl,idnumber,purchasednumber,accumulatednumberofproducts,accumulatedfiatamount,f3value,usdttvalue,buyerwalletaddress, currency, senderid })
+          const fundManagement = new FundManagement({f3amount:f3amount,usdtvalue:usdtvalue,fiatvalue:fiatvalue,usdtpricecreationtime:usdtpricecreationtime,f3pricecreationtime:f3pricecreationtime,fiatpricecreationtime:fiatpricecreationtime,usdtvaluenow:usdtvaluenow,pl:pl,idnumber:idnumber,purchasednumber:purchasednumber,accumulatednumberofproducts:accumulatednumberofproducts,accumulatedfiatamount:accumulatedfiatamount,f3value:f3value,usdttvalue:usdttvalue,buyerwalletaddress:buyerwalletaddress, currency:currency, senderid:senderid })
             await fundManagement.save()
             return res.status(200).send("Record Added Successfully");
         
