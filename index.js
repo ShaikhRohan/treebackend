@@ -1433,7 +1433,7 @@ return res.status(405).send("Request already sent")
         // Get username and password from request body
         const { f3amount, usdtvalue , fiatvalue , usdtpricecreationtime , f3pricecreationtime , fiatpricecreationtime, usdtvaluenow, pl,idnumber,purchasednumber,accumulatednumberofproducts,accumulatedfiatamount,f3value,usdttvalue,buyerwalletaddress, currency , senderid  } = req.body;
         // Find user in users collection
-        
+        console.log(f3amount+" "+usdtvalue+" "+fiatvalue)
         try {
       
           const fundManagement = new FundManagement({f3amount:f3amount,usdtvalue:usdtvalue,fiatvalue:fiatvalue,usdtpricecreationtime:usdtpricecreationtime,f3pricecreationtime:f3pricecreationtime,fiatpricecreationtime:fiatpricecreationtime,usdtvaluenow:usdtvaluenow,pl:pl,idnumber:idnumber,purchasednumber:purchasednumber,accumulatednumberofproducts:accumulatednumberofproducts,accumulatedfiatamount:accumulatedfiatamount,f3value:f3value,usdttvalue:usdttvalue,buyerwalletaddress:buyerwalletaddress, currency:currency, senderid:senderid })
