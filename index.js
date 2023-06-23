@@ -1467,7 +1467,9 @@ return res.status(405).send("Request already sent")
           try {
             const {senderid, currency, idnumber} = req.body;
             // Insert the array of objects into the database
+            console.log(senderid+" "+currency+" "+idnumber)
             const pendingRequest = await FundManagement.find({senderid, currency,idnumber});
+            console.log(pendingRequest)
             if(pendingRequest.length >= 1){
               return res.status(200).send(pendingRequest);
             }
