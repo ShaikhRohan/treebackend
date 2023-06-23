@@ -38,10 +38,10 @@ const fundManagementSchema = new mongoose.Schema({
     required: true
   },
   idnumber: {
-    type: Number,
+    type: String,
     required: true
   },
-  purchasednumber: {
+  releasednumber: {
     type: Number,
     required: true
   },
