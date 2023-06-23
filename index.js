@@ -1438,7 +1438,7 @@ return res.status(405).send("Request already sent")
         try {
           const getLength = await FundManagement.find({senderid, currency , idnumber});
           let lengthOfRecord = getLength.length;
-          let newLengthId = lengthOfRecord++
+          let newLengthId = lengthOfRecord+1
           const fundManagement = new FundManagement({f3amount:f3amount,usdtvalue:usdtvalue,fiatvalue:fiatvalue,usdtpricecreationtime:usdtpricecreationtime,f3pricecreationtime:f3pricecreationtime,fiatpricecreationtime:fiatpricecreationtime,usdtvaluenow:usdtvaluenow,pl:pl,idnumber:idnumber,releasednumber:newLengthId,accumulatednumberofproducts:accumulatednumberofproducts,accumulatedfiatamount:accumulatedfiatamount,f3value:f3value,usdttvalue:usdttvalue,buyerwalletaddress:buyerwalletaddress, currency:currency, senderid:senderid })
             await fundManagement.save()
             return res.status(200).send("Record Added Successfully");
