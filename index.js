@@ -1465,9 +1465,9 @@ return res.status(405).send("Request already sent")
 
         app.post('/getfundmanagementrecord', async (req, res) => {
           try {
-            const {senderid, currency} = req.body;
+            const {senderid, currency, idnumber} = req.body;
             // Insert the array of objects into the database
-            const pendingRequest = await FundManagement.find({senderid, currency});
+            const pendingRequest = await FundManagement.find({senderid, currency,idnumber});
             if(pendingRequest.length >= 1){
               return res.status(200).send(pendingRequest);
             }
