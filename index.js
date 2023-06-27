@@ -1658,7 +1658,32 @@ app.post("/getbnbbalance", async (req, res) => {
   }
 });
 ///////////////////////////////////////////////////////////////
+app.post("/updatereleasefund", async (req, res) => {
+  // Get username and password from request body
+  const { _id , txhash } = req.body;
+  // Find user in users collection
+  try {
+    // Find user in users collection
+    const fundrecord = await FundManagement.findOne({ _id : _id , accept : 0 });
 
+    if (fundrecord) {
+      // Create and sign a JWT token
+      fundrecord.accept = 1;
+      fundrecord.txhash = txhash;
+      fundrecord.releasetime = Date.now
+      await fundrecord.save();
+      return res.status(200).send(fundrecord);
+      // Return the token to the client
+    } else {
+      // Return an error message if the login fails
+      return res.status(401).send("Not Update");
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+///////////////////////////////////////////////////////////////
 app.listen(5000, () => {
   console.log("Server started on port 5000");
 });

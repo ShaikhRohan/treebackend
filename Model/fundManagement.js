@@ -74,6 +74,20 @@ const fundManagementSchema = new mongoose.Schema({
     ref: 'Tree',
     required: true
   },
+  accept: {
+    type: Number,
+    enum: [0, 1],
+    default : 0,
+    required: true
+  },
+  txhash: {
+    type: String,
+    default : ""
+  },
+  releasetime: {
+    type: Date,
+    default: Date.now
+},
 });
 
 const FundManagement = mongoose.model('Funds', fundManagementSchema);
