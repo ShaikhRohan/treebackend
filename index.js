@@ -1603,6 +1603,7 @@ app.post("/getfundmanagementrecord", async (req, res) => {
       senderid,
       currency,
       idnumber,
+      accept : 0
     });
     console.log(pendingRequest);
     if (pendingRequest.length >= 1) {
