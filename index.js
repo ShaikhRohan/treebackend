@@ -1671,7 +1671,7 @@ app.post("/updatereleasefund", async (req, res) => {
       // Create and sign a JWT token
       fundrecord.accept = 1;
       fundrecord.txhash = txhash;
-      fundrecord.releasetime = Date.now
+      fundrecord.releasetime = Date.now()
       await fundrecord.save();
       return res.status(200).send(fundrecord);
       // Return the token to the client
