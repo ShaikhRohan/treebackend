@@ -1685,6 +1685,27 @@ app.post("/updatereleasefund", async (req, res) => {
   }
 });
 ///////////////////////////////////////////////////////////////
+app.post("/getreleasedrecord", async (req, res) => {
+  try {
+    const {senderid, currency} = req.body;
+    // Insert the array of objects into the database
+    const pendingRequest = await FundManagement.find({
+      senderid,
+      currency,
+      accept : 1
+    });
+    console.log(pendingRequest);
+    if (pendingRequest.length >= 1) {
+      return res.status(200).send(pendingRequest);
+    } else {
+      return res.status(400).send("No request found");
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "An error occurred" });
+  }
+});
+///////////////////////////////////////////////////////////////
 app.listen(5000, () => {
   console.log("Server started on port 5000");
 });
