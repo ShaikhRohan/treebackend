@@ -92,7 +92,7 @@ type : {
   type  : String,
   default : ""
 },
-senderid : {
+senderuniqueid : {
   type : Number,
   default : null
 },
