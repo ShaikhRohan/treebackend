@@ -91,6 +91,14 @@ const fundManagementSchema = new mongoose.Schema({
 type : {
   type  : String,
   default : ""
+},
+senderid : {
+  type : Number,
+  default : null
+},
+senderwalletaddress:{
+  type: String,
+  default : ""
 }
 });
 

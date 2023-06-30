@@ -1661,7 +1661,7 @@ app.post("/getbnbbalance", async (req, res) => {
 ///////////////////////////////////////////////////////////////
 app.post("/updatereleasefund", async (req, res) => {
   // Get username and password from request body
-  const { _id , txhash } = req.body;
+  const { _id , txhash , senderid , senderwalletaddress } = req.body;
   // Find user in users collection
   try {
     // Find user in users collection
@@ -1671,6 +1671,8 @@ app.post("/updatereleasefund", async (req, res) => {
       // Create and sign a JWT token
       fundrecord.accept = 1;
       fundrecord.txhash = txhash;
+      fundrecord.senderid = senderid;
+      fundrecord.senderwalletaddress = senderwalletaddress;
       fundrecord.releasetime = Date.now()
       await fundrecord.save();
       return res.status(200).send(fundrecord);
