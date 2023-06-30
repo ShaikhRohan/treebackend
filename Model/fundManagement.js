@@ -88,6 +88,10 @@ const fundManagementSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
 },
+type : {
+  type  : String,
+  default : ""
+}
 });
 
 const FundManagement = mongoose.model('Funds', fundManagementSchema);

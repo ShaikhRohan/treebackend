@@ -1706,6 +1706,119 @@ app.post("/getreleasedrecord", async (req, res) => {
   }
 });
 ///////////////////////////////////////////////////////////////
+app.post("/getreceivedandsent", async (req, res) => {
+  try {
+    const {senderid, currency , idnumber} = req.body;
+    // Insert the array of objects into the database
+    const sentMatch = await FundManagement.find({
+      senderid,
+      currency,
+      accept : 1
+    });
+
+    const receivedMatch = await FundManagement.find({
+      idnumber,
+      currency,
+      accept : 1
+    });
+
+    const mergedArray = [];
+    const sentArray = []
+    const receivedArray = []
+
+    for (const record of sentMatch) {
+      record.type = "sent";
+      mergedArray.push(record);
+      sentArray.push[record]
+    }
+
+    for (const record of receivedMatch) {
+      record.type = "received";
+      mergedArray.push(record);
+      receivedArray.push(record)
+    }
+
+    // if(sentMatch.length > 0){
+    //   return res.status(201).json(sentMatch)
+    // }
+    // if(receivedMatch.length > 0 && sentMatch.length > 0){
+    //   const mergredArray = [...sentMatch , ...receivedMatch]
+    //   return res.status(201).json(mergredArray)
+    // }
+    if(mergedArray.length>0){
+      return res.status(200).json(mergedArray);
+    }
+    else if(receivedArray.length>0){
+      return res.status(200).json(receivedMatch)
+    }
+    else if(sentArray.length>0){
+      return res.status(200).json(sentMatch)
+    }
+    else{
+      return res.status(203).json([])
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "An error occurred" });
+  }
+});
+///////////////////////////////////////////////////////////////
+app.post("/getonlysent", async (req, res) => {
+  try {
+    const {senderid, currency , idnumber} = req.body;
+    // Insert the array of objects into the database
+    const sentMatch = await FundManagement.find({
+      senderid,
+      currency,
+      accept : 1
+    });
+    const receivedArray = []
+    for (const record of sentMatch) {
+      record.type = "sent";
+      receivedArray.push(record)
+    }
+
+
+    if(receivedArray.length>0){
+      return res.status(200).json(receivedArray)
+    }
+    else{
+      return res.status(203).json([])
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "An error occurred" });
+  }
+});
+///////////////////////////////////////////////////////////////
+app.post("/getonlyreceived", async (req, res) => {
+  try {
+    const {senderid, currency , idnumber} = req.body;
+    // Insert the array of objects into the database
+    const receivedMatch = await FundManagement.find({
+      idnumber,
+      currency,
+      accept : 1
+    });
+    const receivedArray = []
+    for (const record of receivedMatch) {
+      record.type = "received";
+      receivedArray.push(record)
+    }
+
+
+    if(receivedArray.length>0){
+      return res.status(200).json(receivedArray)
+    }
+    else{
+      return res.status(203).json([])
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "An error occurred" });
+  }
+});
+///////////////////////////////////////////////////////////////
 app.listen(5000, () => {
   console.log("Server started on port 5000");
 });
