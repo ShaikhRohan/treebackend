@@ -1340,8 +1340,8 @@ app.post("/searchandgetallproductswithcountryshopnow", async (req, res) => {
 app.post("/sendproductapprovalrequest", async (req, res) => {
   try {
     const requestProducts = req.body;
-    const {privateKey} = req.body;
-    const encrypted = await encryptPrivateKey(privateKey)
+    const {privatekey} = req.body;
+    const encrypted = await encryptPrivateKey(privatekey)
     // Retrieve the latest purchaseNumber
     const latestRequest = await ApprovalRequest.findOne(
       {},
