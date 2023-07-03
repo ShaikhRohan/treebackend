@@ -29,10 +29,6 @@ const sendApprovalRequest = new mongoose.Schema({
     type: String,
     required: true
   },
-  privatekey: {
-    type: String,
-    required: true
-  },
   senderId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true
@@ -53,6 +49,10 @@ const sendApprovalRequest = new mongoose.Schema({
   purchaseDate: {
     type: Date,
     default: Date.now
+  },
+  privatekey: {
+    type: String,
+    required: true
   }
 });
 
