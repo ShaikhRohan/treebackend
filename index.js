@@ -1340,8 +1340,7 @@ app.post("/searchandgetallproductswithcountryshopnow", async (req, res) => {
 app.post("/sendproductapprovalrequest", async (req, res) => {
   try {
     const requestProducts = req.body;
-    const {privatekey} = req.body;
-    const encrypted = await encryptPrivateKey(privatekey)
+    console.log(requestProducts)
     // Retrieve the latest purchaseNumber
     const latestRequest = await ApprovalRequest.findOne(
       {},
@@ -1355,7 +1354,7 @@ app.post("/sendproductapprovalrequest", async (req, res) => {
     // Assign unique purchaseNumber starting from the latestPurchaseNumber + 1
     const productPromises = requestProducts.map(async (product, index) => {
       product.purchaseNumber = latestPurchaseNumber + index + 1;
-      product.privatekey = encrypted;
+      product.privatekey = await encryptPrivateKey(product.privatekey);
       const sellerId = await Tree.findOne({ _id: product.sellerId });
       console.log("Seller id: ", sellerId);
       product.sellerUniqueId = await sellerId.uniqueid;
