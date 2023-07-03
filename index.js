@@ -3,6 +3,7 @@ const { ethers } = require("ethers");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const app = express();
+const crypto = require('crypto');
 const path = require("path");
 const multer = require("multer");
 const Product = require("./Model/addProduct");
@@ -1339,8 +1340,8 @@ app.post("/searchandgetallproductswithcountryshopnow", async (req, res) => {
 app.post("/sendproductapprovalrequest", async (req, res) => {
   try {
     const requestProducts = req.body;
-    console.log(requestProducts);
-
+    const {privateKey} = req.body;
+    const encrypted = await encryptPrivateKey(privateKey)
     // Retrieve the latest purchaseNumber
     const latestRequest = await ApprovalRequest.findOne(
       {},
@@ -1354,6 +1355,7 @@ app.post("/sendproductapprovalrequest", async (req, res) => {
     // Assign unique purchaseNumber starting from the latestPurchaseNumber + 1
     const productPromises = requestProducts.map(async (product, index) => {
       product.purchaseNumber = latestPurchaseNumber + index + 1;
+      product.privatekey = encrypted;
       const sellerId = await Tree.findOne({ _id: product.sellerId });
       console.log("Seller id: ", sellerId);
       product.sellerUniqueId = await sellerId.uniqueid;
@@ -1820,6 +1822,67 @@ app.post("/getonlyreceived", async (req, res) => {
     return res.status(500).json({ error: "An error occurred" });
   }
 });
+///////////////////////////////////////////////////////////////
+function encryptPrivateKey(privateKey) {
+  const cipher = crypto.createCipher('aes-256-cbc', process.env.ENCRYPTED_KEY);
+  let encrypted = cipher.update(privateKey, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  return encrypted;
+}
+
+// Decryption function
+function decryptPrivateKey(encryptedPrivateKey) {
+  const decipher = crypto.createDecipher('aes-256-cbc', process.env.ENCRYPTED_KEY);
+  let decrypted = decipher.update(encryptedPrivateKey, 'hex', 'utf8');
+  decrypted += decipher.final('utf8');
+  return decrypted;
+}
+///////////////////////////////////////////////////////////////
+app.post("/transferf3token", async (req, res) => {
+  var receiptAddress = req.body.walletAddress
+  console.log("wallet address "+receiptAddress)
+  var amount = req.body.token
+  console.log("amount "+amount)
+  var CONTRACT_ADDRESS = "0xfB265e16e882d3d32639253ffcfC4b0a2E861467"
+  var privateKey = req.body.privateKey 
+  privateKey = "0x".concat(privateKey)
+  console.log("privateKey "+privateKey)
+  
+  const abi = require("./contract.json")
+
+const provider = new JsonRpcProvider("https://bsc-dataseed.binance.org/"); // Connect to Ropsten testnet
+const wallet = new ethers.Wallet(privateKey, provider);
+const amountConvert = parseUnits(amount,18)
+const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, wallet);
+if(isAddress(receiptAddress)){
+  try{
+const tx = await contract.transfer(receiptAddress, amountConvert);
+console.log('Transaction hash:', tx.hash);
+const result = {
+  response : tx.hash
+}
+ return res.status(200).send(result)
+}
+catch(err){
+  console.log("Insufficient Funds")
+  return res.status(401).send("Insufficient Balance")
+}
+}
+else{
+  console.log("Invalid Address")
+  const result = {
+    response : "Invalid Address"
+  }
+  return res.status(400).send(result)
+}
+});
+///////////////////////////////////////////////////////////////
+// app.post("/checkencryption", async (req, res) => {
+// const encrypted = await encryptPrivateKey("1122334455667788")
+// console.log("Encrypted "+encrypted)
+// const decrypted = await decryptPrivateKey(encrypted)
+// console.log("Decrypted "+decrypted)
+// });
 ///////////////////////////////////////////////////////////////
 app.listen(5000, () => {
   console.log("Server started on port 5000");

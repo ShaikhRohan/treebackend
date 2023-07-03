@@ -29,6 +29,10 @@ const sendApprovalRequest = new mongoose.Schema({
     type: String,
     required: true
   },
+  privatekey: {
+    type: String,
+    required: true
+  },
   senderId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true
