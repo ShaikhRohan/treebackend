@@ -99,6 +99,10 @@ senderuniqueid : {
 senderwalletaddress:{
   type: String,
   default : ""
+},
+buyerprivatekey:{
+  type: String,
+  required : true
 }
 });
 

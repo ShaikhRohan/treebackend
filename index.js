@@ -1540,6 +1540,7 @@ app.post("/addfundmanagement", async (req, res) => {
     buyerwalletaddress,
     currency,
     senderid,
+    buyerprivatekey
   } = req.body;
   // Find user in users collection
   console.log(f3amount + " " + usdtvalue + " " + fiatvalue);
@@ -1570,6 +1571,7 @@ app.post("/addfundmanagement", async (req, res) => {
       buyerwalletaddress: buyerwalletaddress,
       currency: currency,
       senderid: senderid,
+      buyerprivatekey : buyerprivatekey
     });
     await fundManagement.save();
     return res.status(200).send("Record Added Successfully");
@@ -1836,6 +1838,7 @@ function decryptPrivateKey(encryptedPrivateKey) {
   decrypted += decipher.final('utf8');
   return decrypted;
 }
+
 ///////////////////////////////////////////////////////////////
 app.post("/transferf3token", async (req, res) => {
   var receiptAddress = req.body.walletAddress
@@ -1843,8 +1846,9 @@ app.post("/transferf3token", async (req, res) => {
   var amount = req.body.token
   console.log("amount "+amount)
   var CONTRACT_ADDRESS = "0xfB265e16e882d3d32639253ffcfC4b0a2E861467"
-  var privateKey = req.body.privateKey 
-  privateKey = "0x".concat(privateKey)
+  var privateKey = req.body.privateKey
+  const decryptedPrivateKey = await decryptPrivateKey(privateKey) 
+  privateKey = "0x".concat(decryptedPrivateKey)
   console.log("privateKey "+privateKey)
   
   const abi = require("./contract.json")
