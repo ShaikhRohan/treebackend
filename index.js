@@ -1663,7 +1663,7 @@ app.post("/getbnbbalance", async (req, res) => {
 ///////////////////////////////////////////////////////////////
 app.post("/updatereleasefund", async (req, res) => {
   // Get username and password from request body
-  const { _id , txhash , senderuniqueid , senderwalletaddress } = req.body;
+  const { _id , txhash , senderuniqueid , senderwalletaddress , buyertxhash } = req.body;
   // Find user in users collection
   try {
     // Find user in users collection
@@ -1676,6 +1676,7 @@ app.post("/updatereleasefund", async (req, res) => {
       fundrecord.senderuniqueid = senderuniqueid;
       fundrecord.senderwalletaddress = senderwalletaddress;
       fundrecord.releasetime = Date.now()
+      fundrecord.buyertxhash = buyertxhash
       await fundrecord.save();
       return res.status(200).send(fundrecord);
       // Return the token to the client

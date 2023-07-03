@@ -99,6 +99,10 @@ senderuniqueid : {
 senderwalletaddress:{
   type: String,
   default : ""
+},
+buyertxhash:{
+  type: String,
+  default : ""
 }
 });
 
