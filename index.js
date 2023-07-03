@@ -1571,7 +1571,6 @@ app.post("/addfundmanagement", async (req, res) => {
       buyerwalletaddress: buyerwalletaddress,
       currency: currency,
       senderid: senderid,
-      buyerprivatekey : buyerprivatekey
     });
     await fundManagement.save();
     return res.status(200).send("Record Added Successfully");
