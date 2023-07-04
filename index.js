@@ -1841,30 +1841,55 @@ function decryptPrivateKey(encryptedPrivateKey) {
 
 ///////////////////////////////////////////////////////////////
 app.post("/transferf3token", async (req, res) => {
-  var receiptAddress = req.body.walletAddress
+  const { _id , txhash , senderuniqueid , senderwalletaddress  , token , privateKey  } = req.body;
+  let receiptAddress = senderwalletaddress
   console.log("wallet address "+receiptAddress)
-  var amount = req.body.token
+  let amount = token
   console.log("amount "+amount)
-  var CONTRACT_ADDRESS = "0xfB265e16e882d3d32639253ffcfC4b0a2E861467"
-  var privateKey = req.body.privateKey
-  const decryptedPrivateKey = await decryptPrivateKey(privateKey) 
-  privateKey = "0x".concat(decryptedPrivateKey)
-  console.log("privateKey "+privateKey)
+  let CONTRACT_ADDRESS = "0xfB265e16e882d3d32639253ffcfC4b0a2E861467"
+  let privateKeys = privateKey
+  const decryptedPrivateKey = await decryptPrivateKey(privateKeys) 
+  privateKeys = "0x".concat(decryptedPrivateKey)
+  console.log("privateKey "+privateKeys)
   
   const abi = require("./contract.json")
 
 const provider = new JsonRpcProvider("https://bsc-dataseed.binance.org/"); // Connect to Ropsten testnet
-const wallet = new ethers.Wallet(privateKey, provider);
+const wallet = new ethers.Wallet(privateKeys, provider);
 const amountConvert = parseUnits(amount,18)
 const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, wallet);
 if(isAddress(receiptAddress)){
   try{
 const tx = await contract.transfer(receiptAddress, amountConvert);
 console.log('Transaction hash:', tx.hash);
+const txBuyerHash = tx.hash
 const result = {
   response : tx.hash
 }
- return res.status(200).send(result)
+try {
+  // Find user in users collection
+  const fundrecord = await FundManagement.findOne({ _id : _id , accept : 0 });
+
+  if (fundrecord) {
+    // Create and sign a JWT token
+    fundrecord.accept = 1;
+    fundrecord.txhash = txhash;
+    fundrecord.senderuniqueid = senderuniqueid;
+    fundrecord.senderwalletaddress = senderwalletaddress;
+    fundrecord.releasetime = Date.now()
+    fundrecord.buyertxhash = txBuyerHash
+    await fundrecord.save();
+    return res.status(200).send(fundrecord);
+    // Return the token to the client
+  } else {
+    // Return an error message if the login fails
+    return res.status(401).send("Not Update");
+  }
+} catch (err) {
+  console.error(err);
+  res.status(500).json({ error: "Internal server error" });
+}
+//return res.status(200).send(result)
 }
 catch(err){
   console.log("Insufficient Funds")
