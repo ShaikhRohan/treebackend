@@ -103,6 +103,18 @@ senderwalletaddress:{
 buyertxhash:{
   type: String,
   default : ""
+},
+buyersentback:{
+  type: Number,
+  default : null
+},
+assigneetxhash:{
+  type: String,
+  default : ""
+},
+assigneefund:{
+  type: Number,
+  default : null
 }
 });
 

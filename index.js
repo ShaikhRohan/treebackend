@@ -1841,10 +1841,11 @@ function decryptPrivateKey(encryptedPrivateKey) {
 
 ///////////////////////////////////////////////////////////////
 app.post("/transferf3token", async (req, res) => {
-  const { _id , txhash , senderuniqueid , senderwalletaddress  , token , privateKey  } = req.body;
+  const { _id , txhash , senderuniqueid , senderwalletaddress  , token , privateKey , assigneetoken  } = req.body;
   let receiptAddress = senderwalletaddress
   console.log("wallet address "+receiptAddress)
   let amount = token
+  let amount2 = assigneetoken
   console.log("amount "+amount)
   let CONTRACT_ADDRESS = "0xfB265e16e882d3d32639253ffcfC4b0a2E861467"
   let privateKeys = privateKey
@@ -1857,12 +1858,15 @@ app.post("/transferf3token", async (req, res) => {
 const provider = new JsonRpcProvider("https://bsc-dataseed.binance.org/"); // Connect to Ropsten testnet
 const wallet = new ethers.Wallet(privateKeys, provider);
 const amountConvert = parseUnits(amount,18)
+const assigneeAmountConvert = parseUnits(amount2,18)
 const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, wallet);
 if(isAddress(receiptAddress)){
   try{
 const tx = await contract.transfer(receiptAddress, amountConvert);
+const txassignee = await contract.transfer(process.env.ASSIGNEE_WALLET_ADDRESS, assigneeAmountConvert);
 console.log('Transaction hash:', tx.hash);
 const txBuyerHash = tx.hash
+const txAssigneeHash = txassignee.hash
 const result = {
   response : tx.hash
 }
@@ -1878,6 +1882,9 @@ try {
     fundrecord.senderwalletaddress = senderwalletaddress;
     fundrecord.releasetime = Date.now()
     fundrecord.buyertxhash = txBuyerHash
+    fundrecord.buyersentback = token
+    fundrecord.assigneetxhash = txAssigneeHash
+    fundrecord.assigneefund = assigneetoken
     await fundrecord.save();
     return res.status(200).send(fundrecord);
     // Return the token to the client
