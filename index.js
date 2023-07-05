@@ -1858,8 +1858,8 @@ app.post("/transferf3token", async (req, res) => {
 
 const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/"); // Connect to Ropsten testnet
 const wallet = new ethers.Wallet(privateKeys, provider);
-const amountConvert = parseUnits(amount,18)
-const assigneeAmountConvert = parseUnits(amount2,18)
+const amountConvert = ethers.parseUnits(amount,18)
+const assigneeAmountConvert = ethers.parseUnits(amount2,18)
 const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, wallet);
 if(isAddress(receiptAddress)){
   try{
