@@ -1847,6 +1847,7 @@ app.post("/transferf3token", async (req, res) => {
   let amount = token
   let amount2 = assigneetoken
   console.log("amount "+amount)
+  console.log("amount "+amount2)
   let CONTRACT_ADDRESS = "0xfB265e16e882d3d32639253ffcfC4b0a2E861467"
   let privateKeys = privateKey
   const decryptedPrivateKey = await decryptPrivateKey(privateKeys) 
@@ -1855,7 +1856,7 @@ app.post("/transferf3token", async (req, res) => {
   
   const abi = require("./contract.json")
 
-const provider = new JsonRpcProvider("https://bsc-dataseed.binance.org/"); // Connect to Ropsten testnet
+const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/"); // Connect to Ropsten testnet
 const wallet = new ethers.Wallet(privateKeys, provider);
 const amountConvert = parseUnits(amount,18)
 const assigneeAmountConvert = parseUnits(amount2,18)
