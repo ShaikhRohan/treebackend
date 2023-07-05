@@ -1920,6 +1920,28 @@ else{
 }
 });
 ///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+app.post("/sentbackhistory", async (req, res) => {
+  try {
+    const {uniqueId, currency} = req.body;
+    // Insert the array of objects into the database
+    const sentMatch = await FundManagement.find({
+      idnumber:uniqueId,
+      currency,
+      accept : 1
+    });
+    if(sentMatch.length > 0){
+      return res.status(200).send(sentMatch)
+    }
+    else{
+      return res.status(404).send("No Record Found!")
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "An error occurred" });
+  }
+});
+///////////////////////////////////////////////////////////////
 // app.post("/checkencryption", async (req, res) => {
 // const encrypted = await encryptPrivateKey("1122334455667788")
 // console.log("Encrypted "+encrypted)
