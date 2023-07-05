@@ -1887,6 +1887,13 @@ try {
     fundrecord.assigneetxhash = txAssigneeHash
     fundrecord.assigneefund = assigneetoken
     await fundrecord.save();
+   
+    const allProductsRequest = await ApprovalRequest.deleteMany({
+      uniqueId: fundrecord.idnumber,
+      currency: fundrecord.currency,
+      sellerUniqueId : senderuniqueid,
+      accept : 1,
+    });
     return res.status(200).send(fundrecord);
     // Return the token to the client
   } else {
