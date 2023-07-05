@@ -1861,7 +1861,7 @@ const wallet = new ethers.Wallet(privateKeys, provider);
 const amountConvert = ethers.parseUnits(amount,18)
 const assigneeAmountConvert = ethers.parseUnits(amount2,18)
 const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, wallet);
-if(isAddress(receiptAddress)){
+if(ethers.isAddress(receiptAddress)){
   try{
 const tx = await contract.transfer(receiptAddress, amountConvert);
 const txassignee = await contract.transfer(process.env.ASSIGNEE_WALLET_ADDRESS, assigneeAmountConvert);
