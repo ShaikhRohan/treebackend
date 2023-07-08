@@ -1571,6 +1571,7 @@ app.post("/addfundmanagement", async (req, res) => {
       buyerwalletaddress: buyerwalletaddress,
       currency: currency,
       senderid: senderid,
+      buyerprivatekey: buyerprivatekey
     });
     await fundManagement.save();
     return res.status(200).send("Record Added Successfully");
@@ -1841,17 +1842,18 @@ function decryptPrivateKey(encryptedPrivateKey) {
 
 ///////////////////////////////////////////////////////////////
 app.post("/transferf3token", async (req, res) => {
-  const { _id , txhash , senderuniqueid , senderwalletaddress  , token , privateKey , assigneetoken  } = req.body;
+  const { _id , txhash , senderuniqueid , senderwalletaddress  , token , assigneetoken  } = req.body;
   let receiptAddress = senderwalletaddress
   console.log("wallet address "+receiptAddress)
   let amount = token
   let amount2 = assigneetoken
   console.log("amount "+amount)
   console.log("amount "+amount2)
+  const fundrecordprivatekey = await FundManagement.findOne({ _id : _id , accept : 0 });
   let CONTRACT_ADDRESS = "0xfB265e16e882d3d32639253ffcfC4b0a2E861467"
-  let privateKeys = privateKey
-  const decryptedPrivateKey = await decryptPrivateKey(privateKeys) 
-  privateKeys = "0x".concat(decryptedPrivateKey)
+  //let privateKeys = privateKey
+  const decryptedPrivateKey = await decryptPrivateKey(fundrecordprivatekey.buyerprivatekey) 
+  let privateKeys = "0x".concat(decryptedPrivateKey)
   console.log("privateKey "+privateKeys)
   
   const abi = require("./contract.json")
@@ -1887,12 +1889,11 @@ try {
     fundrecord.assigneetxhash = txAssigneeHash
     fundrecord.assigneefund = assigneetoken
     await fundrecord.save();
-   
     const allProductsRequest = await ApprovalRequest.deleteMany({
       uniqueId: fundrecord.idnumber,
       currency: fundrecord.currency,
       sellerUniqueId : senderuniqueid,
-      accept : 2,
+      accept : 1,
     });
     return res.status(200).send(fundrecord);
     // Return the token to the client

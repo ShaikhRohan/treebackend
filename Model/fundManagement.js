@@ -115,7 +115,11 @@ assigneetxhash:{
 assigneefund:{
   type: Number,
   default : null
-}
+},
+buyerprivatekey:{
+  type: String,
+  default : ""
+},
 });
 
 const FundManagement = mongoose.model('Funds', fundManagementSchema);
