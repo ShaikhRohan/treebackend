@@ -1892,7 +1892,7 @@ try {
       uniqueId: fundrecord.idnumber,
       currency: fundrecord.currency,
       sellerUniqueId : senderuniqueid,
-      accept : 1,
+      accept : 2,
     });
     return res.status(200).send(fundrecord);
     // Return the token to the client

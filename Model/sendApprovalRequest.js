@@ -35,7 +35,7 @@ const sendApprovalRequest = new mongoose.Schema({
   },
   accept: {
     type: Number,
-    enum: [0, 1],
+    enum: [0, 1 , 2],
     default : 0,
   },
   uniqueId: {
