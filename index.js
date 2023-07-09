@@ -1943,6 +1943,50 @@ app.post("/sentbackhistory", async (req, res) => {
   }
 });
 ///////////////////////////////////////////////////////////////
+app.post("/searchreleasedfundbyid", async (req, res) => {
+  try {
+    const {searchid, currency, myid } = req.body;
+    // Insert the array of objects into the database
+    const sentMatch = await FundManagement.find({
+      idnumber:searchid,
+      currency,
+      senderuniqueid : myid,
+      accept : 1
+    });
+    if(sentMatch.length > 0){
+      return res.status(200).send(sentMatch)
+    }
+    else{
+      return res.status(404).send("No Record Found!")
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "An error occurred" });
+  }
+});
+///////////////////////////////////////////////////////////////
+app.post("/searchreleasedfundbydate", async (req, res) => {
+  try {
+    const { currency, myid , startdate , enddate } = req.body;
+    // Insert the array of objects into the database
+    const sentMatch = await FundManagement.find({
+      releasetime: { $gte: new Date(`${startdate}T00:00:00.000Z`), $lte: new Date(`${enddate}T23:59:59.999Z`) },
+      accept : 1,
+      currency : currency,
+      senderuniqueid : myid
+    });
+    if(sentMatch.length > 0){
+      return res.status(200).send(sentMatch)
+    }
+    else{
+      return res.status(404).send("No Record Found!")
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "An error occurred" });
+  }
+});
+///////////////////////////////////////////////////////////////
 // app.post("/checkencryption", async (req, res) => {
 // const encrypted = await encryptPrivateKey("1122334455667788")
 // console.log("Encrypted "+encrypted)
