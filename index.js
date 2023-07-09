@@ -1947,6 +1947,54 @@ app.post("/sentbackhistory", async (req, res) => {
   }
 });
 ///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
+app.post("/searchsentbackbyid", async (req, res) => {
+  try {
+    const {searchid, currency, myid } = req.body;
+    // Insert the array of objects into the database
+    const sentMatch = await FundManagement.find({
+      idnumber:myid,
+      currency,
+      senderuniqueid : searchid,
+      accept : 1
+    });
+    if(sentMatch.length > 0){
+      return res.status(200).send(sentMatch)
+    }
+    else{
+      return res.status(404).send("No Record Found!")
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "An error occurred" });
+  }
+});
+///////////////////////////////////////////////////////////////
+app.post("/searchsentbackbydate", async (req, res) => {
+  try {
+    const { currency, myid , startdate , enddate } = req.body;
+    console.log(startdate)
+    console.log(enddate)
+    // Insert the array of objects into the database
+    const sentMatch = await FundManagement.find({
+      releasetime: { $gte: new Date(`${startdate}T00:00:00.000Z`), $lte: new Date(`${enddate}T23:59:59.999Z`) },
+      accept : 1,
+      currency : currency,
+      idnumber : myid
+    });
+    if(sentMatch.length > 0){
+      return res.status(200).send(sentMatch)
+    }
+    else{
+      return res.status(404).send("No Record Found!")
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "An error occurred" });
+  }
+});
+///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
 app.post("/searchreleasedfundbyid", async (req, res) => {
   try {
     const {searchid, currency, myid } = req.body;
