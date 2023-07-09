@@ -1972,6 +1972,8 @@ app.post("/searchreleasedfundbyid", async (req, res) => {
 app.post("/searchreleasedfundbydate", async (req, res) => {
   try {
     const { currency, myid , startdate , enddate } = req.body;
+    console.log(startdate)
+    console.log(enddate)
     // Insert the array of objects into the database
     const sentMatch = await FundManagement.find({
       releasetime: { $gte: new Date(`${startdate}T00:00:00.000Z`), $lte: new Date(`${enddate}T23:59:59.999Z`) },
