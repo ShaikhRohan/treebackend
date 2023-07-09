@@ -1887,28 +1887,6 @@ app.post("/getreceivedandsentbydate", async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ///////////////////////////////////////////////////////////////
 app.post("/getonlysent", async (req, res) => {
   try {
@@ -1937,6 +1915,69 @@ app.post("/getonlysent", async (req, res) => {
     return res.status(500).json({ error: "An error occurred" });
   }
 });
+
+app.post("/getonlysentbyid", async (req, res) => {
+  try {
+    const {senderid, currency , searchid} = req.body;
+    // Insert the array of objects into the database
+    const sentMatch = await FundManagement.find({
+      senderid,
+      currency,
+      accept : 1,
+      idnumber : searchid
+    });
+    const receivedArray = []
+    for (const record of sentMatch) {
+      record.type = "sent";
+      receivedArray.push(record)
+    }
+
+
+    if(receivedArray.length>0){
+      return res.status(200).json(receivedArray)
+    }
+    else{
+      return res.status(203).json([])
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "An error occurred" });
+  }
+});
+
+app.post("/getonlysentbydate", async (req, res) => {
+  try {
+    const {senderid, currency , startdate , enddate} = req.body;
+    // Insert the array of objects into the database
+    const sentMatch = await FundManagement.find({
+      senderid,
+      currency,
+      accept : 1,
+      releasetime: { $gte: new Date(`${startdate}T00:00:00.000Z`), $lte: new Date(`${enddate}T23:59:59.999Z`) }
+    });
+    const receivedArray = []
+    for (const record of sentMatch) {
+      record.type = "sent";
+      receivedArray.push(record)
+    }
+
+
+    if(receivedArray.length>0){
+      return res.status(200).json(receivedArray)
+    }
+    else{
+      return res.status(203).json([])
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "An error occurred" });
+  }
+});
+
+
+
+
+
 ///////////////////////////////////////////////////////////////
 app.post("/getonlyreceived", async (req, res) => {
   try {
@@ -1965,6 +2006,68 @@ app.post("/getonlyreceived", async (req, res) => {
     return res.status(500).json({ error: "An error occurred" });
   }
 });
+
+
+app.post("/getonlyreceivedbyid", async (req, res) => {
+  try {
+    const { currency , idnumber , searchid} = req.body;
+    // Insert the array of objects into the database
+    const receivedMatch = await FundManagement.find({
+      idnumber,
+      currency,
+      accept : 1,
+      senderuniqueid : searchid
+    });
+    const receivedArray = []
+    for (const record of receivedMatch) {
+      record.type = "received";
+      receivedArray.push(record)
+    }
+
+
+    if(receivedArray.length>0){
+      return res.status(200).json(receivedArray)
+    }
+    else{
+      return res.status(203).json([])
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "An error occurred" });
+  }
+});
+
+app.post("/getonlyreceivedbydate", async (req, res) => {
+  try {
+    const { currency , idnumber , startdate , enddate} = req.body;
+    // Insert the array of objects into the database
+    const receivedMatch = await FundManagement.find({
+      idnumber,
+      currency,
+      accept : 1,
+      releasetime: { $gte: new Date(`${startdate}T00:00:00.000Z`), $lte: new Date(`${enddate}T23:59:59.999Z`) }
+    });
+    const receivedArray = []
+    for (const record of receivedMatch) {
+      record.type = "received";
+      receivedArray.push(record)
+    }
+
+
+    if(receivedArray.length>0){
+      return res.status(200).json(receivedArray)
+    }
+    else{
+      return res.status(203).json([])
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "An error occurred" });
+  }
+});
+
+
+
 ///////////////////////////////////////////////////////////////
 function encryptPrivateKey(privateKey) {
   const cipher = crypto.createCipher('aes-256-cbc', process.env.ENCRYPTED_KEY);
