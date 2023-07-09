@@ -1875,15 +1875,19 @@ const result = {
 }
 try {
   // Find user in users collection
+  const fundrecord2 = await FundManagement.findOne({ _id : _id , accept : 0 });
+  if(fundrecord2){
+    fundrecord2.txhash = txhash
+    fundrecord2.senderuniqueid = senderuniqueid;
+    fundrecord2.senderwalletaddress = senderwalletaddress;
+    fundrecord2.releasetime = Date.now()
+    await fundrecord2.save()
+  }
   const fundrecord = await FundManagement.findOne({ _id : _id , accept : 0 });
 
   if (fundrecord) {
     // Create and sign a JWT token
     fundrecord.accept = 1;
-    fundrecord.txhash = txhash;
-    fundrecord.senderuniqueid = senderuniqueid;
-    fundrecord.senderwalletaddress = senderwalletaddress;
-    fundrecord.releasetime = Date.now()
     fundrecord.buyertxhash = txBuyerHash
     fundrecord.buyersentback = token
     fundrecord.assigneetxhash = txAssigneeHash
