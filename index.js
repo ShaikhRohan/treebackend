@@ -1540,7 +1540,8 @@ app.post("/addfundmanagement", async (req, res) => {
     buyerwalletaddress,
     currency,
     senderid,
-    buyerprivatekey
+    buyerprivatekey,
+    senderwalletaddress
   } = req.body;
   // Find user in users collection
   console.log(f3amount + " " + usdtvalue + " " + fiatvalue);
@@ -1571,7 +1572,8 @@ app.post("/addfundmanagement", async (req, res) => {
       buyerwalletaddress: buyerwalletaddress,
       currency: currency,
       senderid: senderid,
-      buyerprivatekey: buyerprivatekey
+      buyerprivatekey: buyerprivatekey,
+      senderwalletaddress: senderwalletaddress
     });
     await fundManagement.save();
     return res.status(200).send("Record Added Successfully");
@@ -2086,9 +2088,10 @@ function decryptPrivateKey(encryptedPrivateKey) {
 
 ///////////////////////////////////////////////////////////////
 app.post("/transferf3token", async (req, res) => {
-  const { _id , txhash , senderuniqueid , senderwalletaddress  , token , assigneetoken  } = req.body;
-  let receiptAddress = senderwalletaddress
-  console.log("wallet address "+receiptAddress)
+  const { _id , txhash , senderuniqueid  , token , assigneetoken  } = req.body;
+  
+  
+  console.log("TxHash "+txhash)
   let amount = token
   let amount2 = assigneetoken
   console.log("amount "+amount)
@@ -2099,7 +2102,8 @@ app.post("/transferf3token", async (req, res) => {
   const decryptedPrivateKey = await decryptPrivateKey(fundrecordprivatekey.buyerprivatekey) 
   let privateKeys = "0x".concat(decryptedPrivateKey)
   console.log("privateKey "+privateKeys)
-  
+  let receiptAddress = fundrecordprivatekey.senderwalletaddress
+  console.log("wallet address "+receiptAddress)
   const abi = require("./contract.json")
 
 const provider = new ethers.JsonRpcProvider("https://bsc-dataseed.binance.org/"); // Connect to Ropsten testnet
@@ -2123,7 +2127,6 @@ try {
   if(fundrecord2){
     fundrecord2.txhash = txhash
     fundrecord2.senderuniqueid = senderuniqueid;
-    fundrecord2.senderwalletaddress = senderwalletaddress;
     fundrecord2.releasetime = Date.now()
     await fundrecord2.save()
   }

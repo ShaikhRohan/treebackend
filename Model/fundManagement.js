@@ -98,7 +98,7 @@ senderuniqueid : {
 },
 senderwalletaddress:{
   type: String,
-  default : ""
+  required : true
 },
 buyertxhash:{
   type: String,
@@ -118,7 +118,7 @@ assigneefund:{
 },
 buyerprivatekey:{
   type: String,
-  default : ""
+  required : true
 },
 });
 
