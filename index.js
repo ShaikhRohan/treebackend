@@ -2092,6 +2092,9 @@ app.post("/transferf3token", async (req, res) => {
   
   
   console.log("TxHash "+txhash)
+  if(txhash === null || txhash === undefined || txhash ===""){
+    return res.status(400).send("Transaction not successful")
+  }
   let amount = token
   let amount2 = assigneetoken
   console.log("amount "+amount)
